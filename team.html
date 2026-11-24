@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AgentTeams 研发团队</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:system-ui,-apple-system,sans-serif;background:#f0f4f8;color:#1a202c;line-height:1.6}
+a{color:#2b6cb0}
+a:focus-visible{outline:3px solid #4299e1;outline-offset:2px;border-radius:4px}
+header{background:linear-gradient(135deg,#2b6cb0 0%,#3182ce 100%);color:#fff;text-align:center;padding:3rem 1.5rem 2rem}
+header h1{font-size:clamp(1.5rem,4vw,2.25rem);font-weight:700;margin-bottom:.5rem}
+header p{font-size:clamp(.95rem,2.5vw,1.15rem);opacity:.92;max-width:600px;margin:0 auto}
+section{max-width:960px;margin:2rem auto;padding:0 1.5rem}
+h2{font-size:clamp(1.2rem,3vw,1.5rem);font-weight:600;color:#2d3748;margin-bottom:1rem;text-align:center}
+h3{font-size:1.1rem;font-weight:600;color:#2d3748;margin-bottom:.35rem}
+
+/* Role cards */
+.roles{display:grid;gap:1.25rem;grid-template-columns:repeat(auto-fit,minmax(220px,1fr))}
+.card{background:#fff;border-radius:12px;padding:1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.06);border-left:4px solid #4299e1;transition:transform .15s}
+.card:hover{transform:translateY(-3px)}
+.card .icon{font-size:2rem;margin-bottom:.5rem}
+.card p{font-size:.92rem;color:#4a5568}
+
+/* Collaboration flow */
+.flow{background:#fff;border-radius:12px;padding:2rem 1.5rem;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.flow-steps{display:flex;flex-wrap:wrap;justify-content:center;gap:.75rem;align-items:center}
+.flow-step{background:#ebf8ff;color:#2b6cb0;border-radius:8px;padding:.6rem 1rem;font-size:.9rem;font-weight:500;white-space:nowrap}
+.flow-arrow{color:#a0aec0;font-size:1.1rem}
+
+/* Links */
+.links{display:flex;flex-wrap:wrap;gap:1rem;justify-content:center;margin-top:2rem;padding-bottom:2rem}
+.links a{display:inline-block;background:#2b6cb0;color:#fff;text-decoration:none;border-radius:8px;padding:.7rem 1.5rem;font-weight:500;transition:background .15s}
+.links a:hover{background:#2c5282}
+
+/* Responsive */
+@media(max-width:480px){
+  header{padding:2rem 1rem 1.5rem}
+  .roles{grid-template-columns:1fr}
+  .flow-steps{flex-direction:column;align-items:stretch}
+  .flow-arrow{transform:rotate(90deg);text-align:center}
+}
+@media(min-width:1280px){
+  section{max-width:1120px}
+  .roles{grid-template-columns:repeat(4,1fr)}
+}
+</style>
+</head>
+<body>
+<header>
+  <h1>AgentTeams 研发团队</h1>
+  <p>我们是一支专注于 AI Agent 协作开发的工程团队，通过标准化流程确保代码质量和交付效率。</p>
+</header>
+
+<section aria-labelledby="roles-heading">
+  <h2 id="roles-heading">团队成员</h2>
+  <div class="roles" role="list">
+    <div class="card" role="listitem">
+      <div class="icon" aria-hidden="true">👑</div>
+      <h3>Leader</h3>
+      <p>负责需求拆解、任务规划与分配、进度跟踪及最终交付验收。</p>
+    </div>
+    <div class="card" role="listitem">
+      <div class="icon" aria-hidden="true">💻</div>
+      <h3>Developer</h3>
+      <p>根据验收标准实现功能或缺修复，编写回归测试并提交代码变更。</p>
+    </div>
+    <div class="card" role="listitem">
+      <div class="icon" aria-hidden="true">🔍</div>
+      <h3>Reviewer</h3>
+      <p>独立进行代码审查，分析问题根因，确保实现符合规范与质量标准。</p>
+    </div>
+    <div class="card" role="listitem">
+      <div class="icon" aria-hidden="true">🧪</div>
+      <h3>Tester</h3>
+      <p>独立验证实现是否满足验收标准，运行测试用例并报告验证结果。</p>
+    </div>
+  </div>
+</section>
+
+<section aria-labelledby="flow-heading">
+  <h2 id="flow-heading">协作流程</h2>
+  <div class="flow">
+    <div class="flow-steps" role="list" aria-label="开发流程">
+      <span class="flow-step" role="listitem">需求分析</span>
+      <span class="flow-arrow" aria-hidden="true">→</span>
+      <span class="flow-step" role="listitem">开发实现</span>
+      <span class="flow-arrow" aria-hidden="true">→</span>
+      <span class="flow-step" role="listitem">独立评审</span>
+      <span class="flow-arrow" aria-hidden="true">→</span>
+      <span class="flow-step" role="listitem">测试验证</span>
+      <span class="flow-arrow" aria-hidden="true">→</span>
+      <span class="flow-step" role="listitem">Draft PR</span>
+    </div>
+  </div>
+</section>
+
+<nav class="links" aria-label="仓库导航">
+  <a href="https://github.com/shiyiyue1102/agentteams-codex-squad-e2e/issues">查看 Issues</a>
+  <a href="https://github.com/shiyiyue1102/agentteams-codex-squad-e2e/pulls">查看 PR</a>
+</nav>
+</body>
+</html>
