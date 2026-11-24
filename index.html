@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>开发小队 · 计数器</title>
+<style>
+body{font:16px system-ui;background:#f4f7f6;color:#172c25;margin:0;display:grid;place-items:center;min-height:100vh}
+main{background:white;padding:48px;border-radius:20px;box-shadow:0 10px 40px #19372b15;text-align:center}
+output{display:block;font-size:64px;margin:24px}button{font:inherit;background:#21815d;color:white;border:0;border-radius:10px;padding:12px 30px;cursor:pointer}
+</style>
+<main><h1>点击一次，增加 1</h1><p>AgentTeams 开发小队验证页面</p><output id="count" aria-live="polite">0</output><button id="increment">+1</button></main>
+<script type="module">
+import { increment } from './counter.js';
+const count = document.getElementById('count');
+document.getElementById('increment').addEventListener('click', () => {
+  count.value = String(increment(Number(count.value)));
+});
+</script>
+</html>
