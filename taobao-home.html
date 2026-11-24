@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>淘宝首页 - 演示页面</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --tb-orange: #ff5000;
+    --tb-light: #ff6a00;
+    --tb-bg: #f5f5f5;
+    --tb-card-bg: #fff;
+    --tb-text: #333;
+    --tb-text-light: #666;
+    --tb-border: #eee;
+    --tb-red: #e4393c;
+    --tb-gold: #ff9900;
+  }
+  body {
+    font-family: -apple-system, "PingFang SC", "Microsoft YaHei", "Helvetica Neue", Arial, sans-serif;
+    background: var(--tb-bg);
+    color: var(--tb-text);
+    line-height: 1.5;
+  }
+  a { color: var(--tb-orange); text-decoration: none; }
+  a:focus, button:focus, input:focus { outline: 2px solid var(--tb-orange); outline-offset: 2px; }
+
+  /* Disclaimer Banner */
+  .demo-banner {
+    background: #fff3e0;
+    color: #e65100;
+    text-align: center;
+    padding: 6px 12px;
+    font-size: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* Top Toolbar */
+  .header {
+    background: linear-gradient(135deg, var(--tb-orange) 0%, var(--tb-light) 100%);
+    padding: 12px 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 8px rgba(255,80,0,0.25);
+  }
+  .header-inner {
+    max-width: 1190px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+  }
+  .brand-logo {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    color: var(--tb-orange);
+    font-size: 18px;
+  }
+  .brand-text {
+    color: #fff;
+    font-size: 22px;
+    font-weight: 700;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.15);
+  }
+
+  /* Search Bar */
+  .search-bar {
+    flex: 1;
+    min-width: 200px;
+    max-width: 600px;
+    display: flex;
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  .search-bar input {
+    flex: 1;
+    border: none;
+    padding: 10px 16px;
+    font-size: 14px;
+    outline: none;
+    min-width: 0;
+  }
+  .search-bar button {
+    background: var(--tb-orange);
+    color: #fff;
+    border: none;
+    padding: 10px 24px;
+    font-size: 14px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s;
+  }
+  .search-bar button:hover { background: #e04800; }
+  .search-bar button:focus { outline: none; box-shadow: inset 0 0 0 2px #fff; }
+
+  /* Nav links */
+  .nav-links {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+  }
+  .nav-links a {
+    color: #fff;
+    font-size: 13px;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  .nav-links a:hover, .nav-links a:focus { background: rgba(255,255,255,0.2); }
+
+  /* Category Tabs */
+  .category-bar {
+    background: #fff;
+    border-bottom: 1px solid var(--tb-border);
+  }
+  .category-inner {
+    max-width: 1190px;
+    margin: 0 auto;
+    padding: 0 16px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cat-tab {
+    padding: 12px 20px;
+    font-size: 14px;
+    color: var(--tb-text-light);
+    cursor: pointer;
+    white-space: nowrap;
+    border: none;
+    background: none;
+    position: relative;
+    transition: color 0.2s;
+  }
+  .cat-tab:hover { color: var(--tb-orange); }
+  .cat-tab[aria-selected="true"] {
+    color: var(--tb-orange);
+    font-weight: 700;
+  }
+  .cat-tab[aria-selected="true"]::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 20px; right: 20px;
+    height: 3px;
+    background: var(--tb-orange);
+    border-radius: 3px 3px 0 0;
+  }
+  .cat-tab:focus { outline: none; background: #fff3e0; }
+
+  /* Hero Banner */
+  .hero {
+    max-width: 1190px;
+    margin: 16px auto;
+    padding: 0 16px;
+  }
+  .hero-card {
+    background: linear-gradient(135deg, #ff7e00 0%, #ff5000 50%, #e04800 100%);
+    border-radius: 12px;
+    padding: 32px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
+    color: #fff;
+    box-shadow: 0 4px 16px rgba(255,80,0,0.3);
+  }
+  .hero-text h2 { font-size: 28px; margin-bottom: 8px; }
+  .hero-text p { font-size: 15px; opacity: 0.9; }
+  .hero-badge {
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(4px);
+    padding: 16px 32px;
+    border-radius: 12px;
+    text-align: center;
+  }
+  .hero-badge .price { font-size: 36px; font-weight: 900; }
+  .hero-badge .label { font-size: 13px; opacity: 0.85; }
+
+  /* Section Title */
+  .section-title {
+    max-width: 1190px;
+    margin: 24px auto 12px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title h2 {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--tb-text);
+  }
+  .section-title .icon { font-size: 22px; }
+
+  /* Product Grid */
+  .product-grid {
+    max-width: 1190px;
+    margin: 0 auto 40px;
+    padding: 0 16px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+  }
+  .product-card {
+    background: var(--tb-card-bg);
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+  }
+  .product-card:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.1); }
+  .product-card:focus-within { box-shadow: 0 0 0 3px var(--tb-orange); }
+  .product-img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    background: linear-gradient(135deg, #f7f7f7 0%, #ececec 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 48px;
+    color: #ccc;
+  }
+  .product-info { padding: 12px; flex: 1; display: flex; flex-direction: column; }
+  .product-name {
+    font-size: 14px;
+    color: var(--tb-text);
+    margin-bottom: 8px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    flex: 1;
+  }
+  .product-price {
+    color: var(--tb-red);
+    font-size: 18px;
+    font-weight: 700;
+  }
+  .product-price::before { content: '\00a5'; font-size: 14px; margin-right: 2px; }
+  .product-sold { font-size: 12px; color: #999; margin-top: 4px; }
+
+  /* Empty State */
+  .empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+  }
+  .empty-state .icon { font-size: 64px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; }
+
+  /* Footer */
+  .footer {
+    background: #fff;
+    border-top: 1px solid var(--tb-border);
+    padding: 24px 16px;
+    text-align: center;
+    font-size: 13px;
+    color: #999;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .header-inner { flex-direction: column; align-items: stretch; }
+    .brand { justify-content: center; }
+    .search-bar { max-width: 100%; }
+    .nav-links { justify-content: center; }
+    .hero-card { padding: 24px 20px; text-align: center; justify-content: center; }
+    .hero-text h2 { font-size: 22px; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  }
+  @media (max-width: 320px) {
+    .brand-text { font-size: 18px; }
+    .brand-logo { width: 32px; height: 32px; font-size: 14px; }
+    .search-bar input { padding: 8px 12px; font-size: 13px; }
+    .search-bar button { padding: 8px 16px; }
+    .product-grid { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+    .product-info { padding: 8px; }
+    .product-name { font-size: 12px; }
+    .product-price { font-size: 15px; }
+    .hero { margin: 10px auto; padding: 0 10px; }
+    .hero-card { padding: 16px; }
+    .hero-text h2 { font-size: 18px; }
+    .hero-badge .price { font-size: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Demo Disclaimer -->
+<div class="demo-banner" role="alert">演示页面，非真实交易</div>
+
+<!-- Header -->
+<header class="header">
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-logo" aria-hidden="true">淘</div>
+      <span class="brand-text"><h1 style="display:inline;font-size:inherit;font-weight:inherit;color:inherit;margin:0;padding:0;">淘宝首页</h1></span>
+    </div>
+    <form class="search-bar" role="search" onsubmit="return false;">
+      <input type="search" id="searchInput" placeholder="搜索商品名称..." aria-label="搜索商品">
+      <button type="button" onclick="doSearch()" aria-label="搜索">搜索</button>
+    </form>
+    <nav class="nav-links" aria-label="导航链接">
+      <a href="#">登录</a>
+      <a href="#">注册</a>
+      <a href="#">购物车</a>
+    </nav>
+  </div>
+</header>
+
+<!-- Category Tabs -->
+<nav class="category-bar" aria-label="商品分类">
+  <div class="category-inner" role="tablist" id="categoryTabs">
+    <button class="cat-tab" role="tab" aria-selected="true" tabindex="0" data-cat="全部" onclick="selectCategory(this)">全部</button>
+    <button class="cat-tab" role="tab" aria-selected="false" tabindex="-1" data-cat="女装" onclick="selectCategory(this)">女装</button>
+    <button class="cat-tab" role="tab" aria-selected="false" tabindex="-1" data-cat="男装" onclick="selectCategory(this)">男装</button>
+    <button class="cat-tab" role="tab" aria-selected="false" tabindex="-1" data-cat="数码" onclick="selectCategory(this)">数码</button>
+    <button class="cat-tab" role="tab" aria-selected="false" tabindex="-1" data-cat="家居" onclick="selectCategory(this)">家居</button>
+    <button class="cat-tab" role="tab" aria-selected="false" tabindex="-1" data-cat="美妆" onclick="selectCategory(this)">美妆</button>
+    <button class="cat-tab" role="tab" aria-selected="false" tabindex="-1" data-cat="食品" onclick="selectCategory(this)">食品</button>
+    <button class="cat-tab" role="tab" aria-selected="false" tabindex="-1" data-cat="运动" onclick="selectCategory(this)">运动</button>
+  </div>
+</nav>
+
+<!-- Hero Banner -->
+<section class="hero" aria-label="促销主视觉">
+  <div class="hero-card">
+    <div class="hero-text">
+      <h2>双十一狂欢节</h2>
+      <p>全场好物低至 1 折起，限时抢购不容错过！</p>
+    </div>
+    <div class="hero-badge">
+      <div class="label">限时秒杀</div>
+      <div class="price">¥9.9</div>
+      <div class="label">起</div>
+    </div>
+  </div>
+</section>
+
+<!-- Product Section -->
+<div class="section-title">
+  <span class="icon">&#128293;</span>
+  <h2>猜你喜欢</h2>
+</div>
+
+<main class="product-grid" id="productGrid" role="list">
+</main>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>演示页面，非真实交易 &copy; 2026 淘宝风格演示</p>
+</footer>
+
+<script>
+  // Product data - 16 items across categories
+  var products = [
+    { name: "秋季新款碎花连衣裙", price: 129.00, sold: "2.3万", cat: "女装", emoji: "\ud83d\udc57" },
+    { name: "男士商务休闲夹克外套", price: 259.00, sold: "8千", cat: "男装", emoji: "\ud83e\udde5" },
+    { name: "无线蓝牙降噪耳机 Pro", price: 399.00, sold: "5.6万", cat: "数码", emoji: "\ud83c\udfa7" },
+    { name: "北欧简约落地台灯", price: 89.00, sold: "1.2万", cat: "家居", emoji: "\ud83d\udca1" },
+    { name: "滋润保湿口红套装3支", price: 69.00, sold: "9.8万", cat: "美妆", emoji: "\ud83d\udc84" },
+    { name: "进口坚果大礼包1kg", price: 79.00, sold: "3.5万", cat: "食品", emoji: "\ud83e\udd5c" },
+    { name: "专业跑步运动鞋减震款", price: 199.00, sold: "4.1万", cat: "运动", emoji: "\ud83d\udc5f" },
+    { name: "真丝桑蚕丝围巾礼盒", price: 168.00, sold: "6千", cat: "女装", emoji: "\ud83e\uddf6" },
+    { name: "智能手表运动监测版", price: 599.00, sold: "2.8万", cat: "数码", emoji: "\u231a" },
+    { name: "纯棉四件套床上用品", price: 159.00, sold: "7.2万", cat: "家居", emoji: "\ud83d\udecf\ufe0f" },
+    { name: "男士修身牛仔裤弹力款", price: 139.00, sold: "3.3万", cat: "男装", emoji: "\ud83d\udc56" },
+    { name: "燕窝即食礼盒装6瓶", price: 199.00, sold: "1.5万", cat: "食品", emoji: "\ud83e\udd44" },
+    { name: "瑜伽垫加厚防滑款", price: 49.00, sold: "6.7万", cat: "运动", emoji: "\ud83e\uddd8" },
+    { name: "精华液美白淡斑30ml", price: 128.00, sold: "4.5万", cat: "美妆", emoji: "\u2728" },
+    { name: "便携式迷你充电宝", price: 59.00, sold: "12万", cat: "数码", emoji: "\ud83d\udd0b" },
+    { name: "儿童纯棉卡通睡衣套装", price: 79.00, sold: "2.1万", cat: "女装", emoji: "\ud83d\udc76" }
+  ];
+
+  var currentCategory = "全部";
+  var currentSearch = "";
+
+  function renderProducts() {
+    var grid = document.getElementById("productGrid");
+    grid.innerHTML = "";
+    var filtered = products.filter(function(p) {
+      var catOk = currentCategory === "全部" || p.cat === currentCategory;
+      var searchOk = currentSearch === "" || p.name.indexOf(currentSearch) !== -1;
+      return catOk && searchOk;
+    });
+
+    if (filtered.length === 0) {
+      grid.innerHTML = '<div class="empty-state"><div class="icon">\ud83d\ude15</div><p>没有找到相关商品，换个条件试试吧</p></div>';
+      return;
+    }
+
+    filtered.forEach(function(p) {
+      var card = document.createElement("div");
+      card.className = "product-card";
+      card.setAttribute("role", "listitem");
+      card.setAttribute("tabindex", "0");
+      card.setAttribute("aria-label", p.name + "，价格" + p.price + "元");
+      card.innerHTML =
+        '<div class="product-img" aria-hidden="true">' + p.emoji + '</div>' +
+        '<div class="product-info">' +
+          '<div class="product-name">' + p.name + '</div>' +
+          '<div class="product-price">' + p.price.toFixed(2) + '</div>' +
+          '<div class="product-sold">已售 ' + p.sold + '</div>' +
+        '</div>';
+      grid.appendChild(card);
+    });
+  }
+
+  function selectCategory(tab) {
+    var tabs = document.getElementById("categoryTabs").children;
+    for (var i = 0; i < tabs.length; i++) {
+      tabs[i].setAttribute("aria-selected", "false");
+      tabs[i].setAttribute("tabindex", "-1");
+    }
+    tab.setAttribute("aria-selected", "true");
+    tab.setAttribute("tabindex", "0");
+    currentCategory = tab.getAttribute("data-cat");
+
+    // If "全部" and search is empty, show all
+    if (currentCategory === "全部" && currentSearch === "") {
+      currentSearch = "";
+      document.getElementById("searchInput").value = "";
+    }
+    renderProducts();
+  }
+
+  function doSearch() {
+    currentSearch = document.getElementById("searchInput").value.trim();
+    renderProducts();
+  }
+
+  // Keyboard: Enter to search
+  document.getElementById("searchInput").addEventListener("keydown", function(e) {
+    if (e.key === "Enter") { doSearch(); }
+  });
+
+  // Category keyboard navigation
+  document.getElementById("categoryTabs").addEventListener("keydown", function(e) {
+    var tabs = Array.prototype.slice.call(this.children);
+    var idx = tabs.indexOf(document.activeElement);
+    if (idx === -1) return;
+    var next = -1;
+    if (e.key === "ArrowRight" || e.key === "ArrowDown") {
+      e.preventDefault();
+      next = (idx + 1) % tabs.length;
+    } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+      e.preventDefault();
+      next = (idx - 1 + tabs.length) % tabs.length;
+    } else if (e.key === "Home") {
+      e.preventDefault();
+      next = 0;
+    } else if (e.key === "End") {
+      e.preventDefault();
+      next = tabs.length - 1;
+    }
+    if (next !== -1) {
+      selectCategory(tabs[next]);
+      tabs[next].focus();
+    }
+  });
+
+  // Live search on input (debounced)
+  var searchTimer;
+  document.getElementById("searchInput").addEventListener("input", function() {
+    clearTimeout(searchTimer);
+    var self = this;
+    searchTimer = setTimeout(function() {
+      currentSearch = self.value.trim();
+      renderProducts();
+    }, 300);
+  });
+
+  // Initial render
+  renderProducts();
+</script>
+</body>
+</html>
