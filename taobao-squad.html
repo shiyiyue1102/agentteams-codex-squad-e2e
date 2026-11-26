@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>淘好物 · 每一件，都值得喜欢</title>
+<style>
+:root{font-family:system-ui,-apple-system,"Segoe UI","Microsoft YaHei",sans-serif;color:#29251f;background:#f7f5f1;font-synthesis:none;--orange:#ed501b;--muted:#77716a;--line:#e9e4dc}
+*{box-sizing:border-box}body{margin:0}button,input{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #176a91;outline-offset:4px}a{color:inherit}svg{display:block}button{touch-action:manipulation}.shell{max-width:1240px;margin:auto;padding:0 28px}.topbar{background:#eeeae3;color:#6d645b;font-size:12px}.topbar .shell{display:flex;justify-content:space-between;gap:12px;padding-top:10px;padding-bottom:10px}.topbar strong{color:#b43b12;font-weight:600}.masthead{display:flex;align-items:center;gap:46px;padding-top:32px;padding-bottom:30px}.brand{flex-shrink:0;text-decoration:none;display:flex;align-items:center;gap:10px}.brand-mark{display:grid;place-items:center;background:var(--orange);color:white;border-radius:15px;width:53px;height:53px;font-size:33px;font-weight:900;transform:rotate(-7deg)}.brand-name{font-size:27px;font-weight:850;letter-spacing:-1px}.brand small{display:block;font-size:10px;letter-spacing:3px;color:var(--orange);margin-top:1px}.search-area{flex:1;min-width:0}.search-form{display:flex;border:2px solid var(--orange);background:white;border-radius:14px;padding:4px;gap:6px}.search-form input{border:0;background:none;min-width:0;flex:1;padding:9px 14px;font-size:14px;outline-offset:0}.search-form button{border:0;background:var(--orange);color:white;padding:10px 26px;border-radius:9px;font-weight:700;flex-shrink:0}.search-hint{color:var(--muted);font-size:11px;margin:8px 0 0 14px}.offline{font-size:12px;display:flex;align-items:center;gap:7px;white-space:nowrap}.offline::before{content:"";width:7px;height:7px;border-radius:50%;background:#4f8062}.hero{display:grid;grid-template-columns:1fr 280px;gap:16px;margin-bottom:32px}.hero-main{position:relative;isolation:isolate;overflow:hidden;min-height:265px;background:#f8dfc5;border-radius:22px;padding:35px 34px;display:flex;align-items:center}.hero-copy{position:relative;z-index:1;max-width:65%}.eyebrow{font-size:11px;font-weight:750;letter-spacing:3px;color:#995337;margin:0 0 12px}.hero h1{font-size:39px;line-height:1.18;letter-spacing:-2px;margin:0 0 13px}.hero p:not(.eyebrow){font-size:13px;color:#7c5946;line-height:1.8;margin:0}.hero-label{display:inline-block;margin-top:20px;background:#fff7e9;padding:8px 13px;border-radius:30px;font-size:11px;color:#8a4828}.hero-art{position:absolute;width:300px;height:270px;right:0;bottom:-5px;transform:rotate(-8deg);opacity:.94;z-index:-1}.hero-aside{background:#e8ece3;border-radius:22px;padding:26px;display:flex;flex-direction:column;justify-content:space-between}.hero-aside .number{font-size:48px;line-height:1;font-weight:800;letter-spacing:-3px;color:#45654c}.hero-aside h2{font-size:18px;margin:12px 0 7px}.hero-aside p{color:#64715e;font-size:12px;line-height:1.8;margin:0}.aside-tag{font-size:10px;letter-spacing:2px;color:#66755e;margin-top:18px}.section-head{display:flex;align-items:end;justify-content:space-between;gap:12px;margin-bottom:19px}.section-head h2{font-size:23px;letter-spacing:-.7px;margin:0}.section-head p{color:var(--muted);font-size:12px;margin:6px 0 0}.section-head>span{font-size:10px;letter-spacing:2px;color:var(--muted)}.filters{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:18px}.filters button{border:1px solid var(--line);background:#fffdf9;color:#625a50;border-radius:30px;padding:9px 19px;font-size:13px}.filters button[aria-pressed="true"]{background:#302a24;border-color:#302a24;color:white}.filters button:hover{border-color:var(--orange)}.results-bar{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px;min-height:30px}.status{font-size:12px;color:var(--muted);margin:0;overflow-wrap:anywhere}.clear{border:0;background:none;color:#b93c11;font-size:12px;padding:6px;flex-shrink:0}.grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}.card{border:1px solid var(--line);border-radius:17px;background:#fffdf9;overflow:hidden;min-width:0;transition:transform .18s,box-shadow .18s}.card:hover{transform:translateY(-4px);box-shadow:0 10px 24px #3928120c}.product-art{aspect-ratio:1.24;position:relative;display:grid;place-items:center;background:var(--art-bg)}.product-art svg{width:87%;height:87%;max-height:220px}.badge{position:absolute;top:12px;left:12px;font-size:10px;background:#ffffffbb;padding:5px 8px;border-radius:6px;color:#6b594a}.product-body{padding:16px}.category-label{font-size:10px;color:#8e8174;letter-spacing:1px;margin:0 0 6px}.card h3{font-size:14px;line-height:1.6;margin:0 0 8px;font-weight:650;overflow-wrap:anywhere}.description{font-size:11px;color:var(--muted);line-height:1.5;margin:0 0 16px}.price-line{display:flex;align-items:baseline;justify-content:space-between;gap:5px}.price{color:#d84316;font-size:23px;font-weight:750;letter-spacing:-.5px}.price small{font-size:12px;margin-right:3px}.price-line>span:last-child{font-size:10px;color:#8c8379}.empty{text-align:center;border:1px dashed #d6c8b8;border-radius:18px;padding:50px 20px;background:#fffdf9}.empty h3{margin:0 0 10px;font-size:20px}.empty p{font-size:13px;line-height:1.8;color:var(--muted)}.empty button{background:var(--orange);color:white;border:0;border-radius:10px;padding:11px 20px;margin-top:8px}.footer{display:flex;justify-content:space-between;gap:14px;border-top:1px solid var(--line);margin-top:40px;padding-top:23px;padding-bottom:30px;color:#8d8378;font-size:11px;line-height:1.8}.art-library{position:absolute;width:0;height:0;overflow:hidden}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}[hidden]{display:none!important}
+@media(max-width:980px){.masthead{gap:24px}.offline{display:none}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{grid-template-columns:1fr 220px}.hero h1{font-size:33px}.hero-art{right:-45px}.hero-aside{padding:24px}}
+@media(max-width:680px){.shell{padding-left:18px;padding-right:18px}.topbar .shell{font-size:10px}.topbar .shell span:last-child{display:none}.masthead{flex-wrap:wrap;gap:20px;padding-top:23px;padding-bottom:22px}.brand-mark{width:43px;height:43px;font-size:27px;border-radius:12px}.brand-name{font-size:23px}.search-area{flex-basis:100%}.search-form input{padding:8px;font-size:13px}.search-form button{padding:10px 20px}.search-hint{margin-left:4px;font-size:10px}.hero{grid-template-columns:1fr;margin-bottom:27px}.hero-main{min-height:232px;padding:26px 22px;border-radius:17px}.hero h1{font-size:28px}.hero-copy{max-width:74%}.hero p:not(.eyebrow){font-size:11px}.hero-art{width:205px;height:220px;right:-40px;bottom:-18px;opacity:.3}.eyebrow{font-size:9px;letter-spacing:2px}.hero-label{font-size:10px;margin-top:15px}.hero-aside{display:none}.grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}.section-head h2{font-size:22px}.section-head>span{display:none}.filters{gap:7px}.filters button{padding:8px 14px;font-size:12px}.card{border-radius:12px}.product-body{padding:11px}.card h3{font-size:12px}.description{font-size:10px;min-height:30px;margin-bottom:10px}.price{font-size:21px}.price-line{flex-wrap:wrap}.price-line>span:last-child{font-size:9px}.badge{top:8px;left:8px;font-size:9px;padding:4px 6px}.footer{display:block;margin-top:28px}.footer span{display:block;margin-bottom:5px}}
+@media(prefers-reduced-motion:reduce){.card{transition:none}.card:hover{transform:none}}
+</style>
+</head>
+<body>
+<svg class="art-library" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+<symbol id="art-bag" viewBox="0 0 240 200"><ellipse cx="120" cy="178" rx="76" ry="10" fill="#000" opacity=".07"/><path d="M75 61C75 7 165 7 165 61" fill="none" stroke="#966647" stroke-width="10"/><path d="M53 61H187L200 170Q120 191 40 170Z" fill="#bb8a64"/><path d="M65 62L58 163Q120 178 182 163L175 62" fill="#ceaa85"/><path d="M90 62V87M150 62V87" stroke="#8a6148" stroke-width="7"/><rect x="105" y="112" width="30" height="22" rx="3" fill="#a77b55"/><path d="M71 153H170" stroke="#e3c9ab" stroke-width="2"/></symbol>
+<symbol id="art-headphones" viewBox="0 0 240 200"><ellipse cx="120" cy="178" rx="74" ry="10" fill="#000" opacity=".07"/><path d="M58 121V87C58 8 182 8 182 87V121" fill="none" stroke="#48594a" stroke-width="22"/><path d="M62 83C66 17 173 17 178 83" fill="none" stroke="#a4b19b" stroke-width="8"/><rect x="39" y="92" width="43" height="72" rx="20" fill="#344b3c"/><rect x="158" y="92" width="43" height="72" rx="20" fill="#344b3c"/><rect x="68" y="102" width="13" height="52" rx="6" fill="#a4b19b"/><rect x="159" y="102" width="13" height="52" rx="6" fill="#a4b19b"/></symbol>
+<symbol id="art-lamp" viewBox="0 0 240 200"><ellipse cx="120" cy="178" rx="66" ry="9" fill="#000" opacity=".07"/><path d="M120 79V162" stroke="#ac7848" stroke-width="10"/><ellipse cx="120" cy="166" rx="44" ry="9" fill="#af7d50"/><path d="M85 32H155L181 103Q120 123 59 103Z" fill="#e9c293"/><path d="M96 34L83 106M110 34L105 110M130 34L135 110M144 34L157 106" stroke="#f8dfbb" stroke-width="4"/><ellipse cx="120" cy="104" rx="61" ry="10" fill="#d7a972"/></symbol>
+<symbol id="art-shirt" viewBox="0 0 240 200"><ellipse cx="120" cy="179" rx="69" ry="9" fill="#000" opacity=".07"/><path d="M88 31L57 43L22 91L54 113L73 89V171Q120 181 167 171V89L186 113L218 91L183 43L152 31Q120 54 88 31Z" fill="#779ba9"/><path d="M91 32Q120 69 149 32" fill="none" stroke="#b3cbd0" stroke-width="9"/><path d="M78 163Q120 171 162 163M31 90L53 105M187 105L209 90" fill="none" stroke="#507d90" stroke-width="3"/><path d="M137 81H157V103Q147 114 137 103Z" fill="#91b1bd"/></symbol>
+<symbol id="art-cup" viewBox="0 0 240 200"><ellipse cx="114" cy="178" rx="71" ry="9" fill="#000" opacity=".07"/><path d="M166 77H181C217 77 213 131 171 131" fill="none" stroke="#bd6f4e" stroke-width="13"/><path d="M53 62H173L165 157Q114 180 61 157Z" fill="#d78e6c"/><ellipse cx="113" cy="62" rx="60" ry="14" fill="#f3c6a3"/><ellipse cx="113" cy="63" rx="49" ry="8" fill="#6b4836"/><path d="M87 111Q113 129 140 111" fill="none" stroke="#f4c4a4" stroke-width="4"/><path d="M96 40Q85 28 99 15M124 39Q112 26 126 12" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round"/></symbol>
+<symbol id="art-shoe" viewBox="0 0 240 200"><ellipse cx="120" cy="176" rx="91" ry="9" fill="#000" opacity=".07"/><path d="M35 81L68 89L92 60L135 103L198 123Q216 129 212 153H29Q20 128 35 81Z" fill="#e7dfcc"/><path d="M36 82L68 91L54 126L29 132" fill="#6e8f79"/><path d="M82 98L112 83L135 103L120 125Z" fill="#a9b9a4"/><path d="M29 147H212V163H29Z" fill="#faf9ef"/><path d="M99 89L122 91M108 101L133 102M119 112L147 113" stroke="#fffef5" stroke-width="5" stroke-linecap="round"/><path d="M151 124L185 133" stroke="#b2a58b" stroke-width="3"/></symbol>
+</defs></svg>
+<div class="topbar"><div class="shell"><span><strong>你好，欢迎来淘好物</strong>　把喜欢带回日常</span><span>原创选品演示 · 无需联网</span></div></div>
+<header class="shell masthead">
+<a class="brand" href="#top" aria-label="淘好物首页"><span class="brand-mark" aria-hidden="true">淘</span><span class="brand-name">淘好物<small>GOOD FINDS, GOOD LIFE</small></span></a>
+<div class="search-area"><form class="search-form" id="search-form" role="search"><label class="sr-only" for="search">搜索商品名称</label><input id="search" type="search" placeholder="搜一搜，发现日常小确幸" autocomplete="off" maxlength="160"><button type="submit">搜索</button></form><p class="search-hint">试试「耳机」「帆布」「咖啡」 · 搜索与分类可组合筛选</p></div>
+<div class="offline">离线也能逛</div>
+</header>
+<main class="shell" id="top">
+<section class="hero" aria-label="今日灵感"><div class="hero-main"><div class="hero-copy"><p class="eyebrow">THE EVERYDAY EDIT / 01</p><h1>把日子过成<br>喜欢的样子。</h1><p>不必远行，生活的惊喜就在身边。<br>精选日常好物，认真对待每一份喜欢。</p><span class="hero-label">今日灵感：轻盈、自然、刚刚好</span></div><svg class="hero-art" viewBox="0 0 240 200" aria-hidden="true"><use href="#art-bag"/></svg></div><aside class="hero-aside"><div><span class="number">12<span style="font-size:22px;letter-spacing:0"> / 件</span></span><h2>好物不必太多</h2><p>穿搭、数码、居家与运动<br>从一件心动的小物开始。</p></div><span class="aside-tag">CURATED FOR YOUR EVERYDAY</span></aside></section>
+<section aria-labelledby="recommend-title"><div class="section-head"><div><h2 id="recommend-title">猜你喜欢<span style="color:var(--orange)"> ·</span></h2><p>挑一件好物，给平凡日常加点温度</p></div><span>FIND YOUR LITTLE JOY</span></div>
+<nav class="filters" id="categories" aria-label="商品分类"><button type="button" data-category="全部" aria-pressed="true">全部</button><button type="button" data-category="服饰箱包" aria-pressed="false">服饰箱包</button><button type="button" data-category="数码配件" aria-pressed="false">数码配件</button><button type="button" data-category="居家生活" aria-pressed="false">居家生活</button><button type="button" data-category="运动户外" aria-pressed="false">运动户外</button></nav>
+<div class="results-bar"><p class="status" id="status" role="status" aria-live="polite" aria-atomic="true"></p><button class="clear" id="clear-search" type="button" hidden>清空搜索 ×</button></div>
+<div class="grid" id="products"></div><div class="empty" id="empty" hidden><h3>暂时没有找到心仪好物</h3><p>换个关键词，或者清除筛选再逛逛吧。<br>搜索按商品名称匹配，并与当前分类取交集。</p><button id="reset" type="button">查看全部好物</button></div>
+</section>
+<noscript><p>请启用浏览器 JavaScript，以显示内嵌商品并使用离线搜索和分类。</p></noscript>
+</main>
+<footer class="shell footer"><span>淘好物 TAO GOOD FINDS · 小队原创离线演示 / Issue #15</span><span>商品与价格均为示例，不提供交易、登录或支付服务。图片为原创内嵌插画。</span></footer>
+<script>
+'use strict';
+const products = [
+  {name:'轻旅帆布托特包',category:'服饰箱包',price:69,art:'bag',background:'#eee4d5',description:'宽大容量 · 装下通勤与周末',tag:'日常百搭'},
+  {name:'森系无线头戴耳机',category:'数码配件',price:239,art:'headphones',background:'#e1e7dc',description:'柔软耳罩 · 给自己一首歌的时间',tag:'编辑精选'},
+  {name:'暖光褶皱床头台灯',category:'居家生活',price:129,art:'lamp',background:'#f2e8d7',description:'温柔暖光 · 点亮阅读的小角落',tag:'氛围好物'},
+  {name:'复古轻量休闲运动鞋',category:'运动户外',price:189,art:'shoe',background:'#e5e8df',description:'轻盈随行 · 去走一段新的路',tag:'轻装出发'},
+  {name:'海盐蓝纯棉短袖',category:'服饰箱包',price:59.9,art:'shirt',background:'#e1eaf0',description:'亲肤棉感 · 清爽自在的一天',tag:'舒适之选'},
+  {name:'日落手作陶瓷咖啡杯',category:'居家生活',price:45,art:'cup',background:'#f2e2d8',description:'圆润握感 · 留住咖啡的温度',tag:'慢享生活'},
+  {name:'城市通勤帆布手提包',category:'服饰箱包',price:89,art:'bag',background:'#e9e2da',description:'简约收纳 · 把日常整理得井井有条',tag:'通勤灵感'},
+  {name:'云朵蓝牙音乐耳机',category:'数码配件',price:169,art:'headphones',background:'#e7e9df',description:'无线聆听 · 陪伴专注的小世界',tag:'随心听见'},
+  {name:'原木书桌阅读台灯',category:'居家生活',price:159,art:'lamp',background:'#eee4d9',description:'自然质感 · 陪你读完下一章',tag:'书房搭配'},
+  {name:'周末漫步低帮运动鞋',category:'运动户外',price:219,art:'shoe',background:'#e3e9e3',description:'舒适脚感 · 把周末交给微风',tag:'户外灵感'},
+  {name:'自在宽松口袋短袖',category:'服饰箱包',price:79,art:'shirt',background:'#e4e8ec',description:'宽松剪裁 · 留一点自在的空间',tag:'基础衣橱'},
+  {name:'晨间拿铁陶瓷咖啡杯',category:'居家生活',price:39.9,art:'cup',background:'#eee0d6',description:'一杯暖意 · 开启不慌不忙的早晨',tag:'美好日常'}
+];
+const searchInput = document.getElementById('search');
+const productGrid = document.getElementById('products');
+const categoryButtons = [...document.querySelectorAll('[data-category]')];
+const statusText = document.getElementById('status');
+let activeCategory = '全部';
+let searchTerm = '';
+const priceFormat = new Intl.NumberFormat('zh-CN',{minimumFractionDigits:2,maximumFractionDigits:2});
+function makeText(tagName,className,text){
+  const element = document.createElement(tagName);
+  element.className = className;
+  element.textContent = text;
+  return element;
+}
+function render(){
+  const matches = products.filter(product => (activeCategory === '全部' || product.category === activeCategory) && product.name.toLocaleLowerCase('zh-CN').includes(searchTerm.toLocaleLowerCase('zh-CN')));
+  productGrid.replaceChildren();
+  for(const product of matches){
+    const card = document.createElement('article');
+    card.className = 'card';
+    const art = document.createElement('div');
+    art.className = 'product-art';
+    art.style.setProperty('--art-bg',product.background);
+    const picture = document.createElementNS('http://www.w3.org/2000/svg','svg');
+    picture.setAttribute('viewBox','0 0 240 200');
+    picture.setAttribute('role','img');
+    picture.setAttribute('aria-label',product.name + '示意插画');
+    const imageUse = document.createElementNS('http://www.w3.org/2000/svg','use');
+    imageUse.setAttribute('href','#art-' + product.art);
+    picture.append(imageUse);
+    art.append(picture,makeText('span','badge',product.tag));
+    const body = document.createElement('div');
+    body.className = 'product-body';
+    const priceLine = document.createElement('div');
+    priceLine.className = 'price-line';
+    const price = document.createElement('span');
+    price.className = 'price';
+    price.append(makeText('small','','¥'),document.createTextNode(priceFormat.format(product.price)));
+    priceLine.append(price,makeText('span','','示例价格'));
+    body.append(makeText('p','category-label',product.category),makeText('h3','',product.name),makeText('p','description',product.description),priceLine);
+    card.append(art,body);
+    productGrid.append(card);
+  }
+  statusText.textContent = activeCategory + (searchTerm ? ' · “' + searchTerm + '”' : '') + ' · 找到 ' + matches.length + ' 件好物';
+  document.getElementById('empty').hidden = matches.length !== 0;
+  document.getElementById('clear-search').hidden = searchTerm.length === 0;
+  for(const button of categoryButtons) button.setAttribute('aria-pressed',String(button.dataset.category === activeCategory));
+}
+document.getElementById('search-form').addEventListener('submit',event => {
+  event.preventDefault();
+  searchTerm = searchInput.value.trim();
+  render();
+});
+searchInput.addEventListener('input',() => {
+  if(searchInput.value === ''){searchTerm = '';render();}
+});
+for(const button of categoryButtons) button.addEventListener('click',() => {activeCategory = button.dataset.category;render();});
+document.getElementById('clear-search').addEventListener('click',() => {searchInput.value = '';searchTerm = '';render();searchInput.focus();});
+document.getElementById('reset').addEventListener('click',() => {searchInput.value = '';searchTerm = '';activeCategory = '全部';render();searchInput.focus();});
+render();
+</script>
+</body>
+</html>
