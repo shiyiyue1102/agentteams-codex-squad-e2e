@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="用计算、对象存储与关系型数据库三个视角，快速理解阿里云 ECS、OSS 和 RDS 的适用场景。非官方演示。">
+  <title>阿里云产品选型指南 · ECS / OSS / RDS</title>
+  <style>
+    :root { color-scheme: light; --ink: #142b36; --muted: #4c606a; --paper: #f6f5f0; --line: #d7ddd8; --accent: #ffbf69; }
+    * { box-sizing: border-box; }
+    html { scroll-padding-top: 24px; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 16px/1.8 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; overflow-wrap: anywhere; }
+    a { color: inherit; text-underline-offset: 5px; }
+    a:focus-visible { outline: 3px solid #b84c00; outline-offset: 5px; }
+    .wrap { width: min(1120px, calc(100% - 48px)); margin-inline: auto; }
+    .skip { position: absolute; top: 12px; left: 12px; padding: 10px 16px; background: white; color: var(--ink); transform: translateY(-180%); z-index: 2; }
+    .skip:focus { transform: none; }
+    .masthead { background: #112d38; color: #fff; }
+    header { display: flex; align-items: center; justify-content: space-between; gap: 24px; padding-block: 22px; border-bottom: 1px solid #42606a; }
+    .brand { font-size: 17px; font-weight: 750; letter-spacing: .04em; }
+    .brand span { color: var(--accent); margin-right: 10px; }
+    .tag { font-size: 12px; letter-spacing: .12em; color: #dae6e8; border: 1px solid #789098; padding: 3px 10px; border-radius: 4px; }
+    .hero { display: grid; grid-template-columns: 1.45fr 1fr; gap: 64px; align-items: center; padding-block: 64px 72px; }
+    .eyebrow { margin: 0 0 16px; font-size: 12px; font-weight: 700; letter-spacing: .16em; color: var(--accent); }
+    h1 { margin: 0 0 24px; font-size: clamp(34px, 4.5vw, 54px); line-height: 1.24; letter-spacing: -.03em; }
+    h1 span { color: var(--accent); }
+    .intro { max-width: 34em; color: #d4e0e2; margin: 0; }
+    .route { border-left: 2px solid #647e86; padding-left: 28px; }
+    .route p { margin: 0 0 14px; color: #c9d9dc; font-size: 14px; }
+    nav { display: grid; gap: 10px; }
+    nav a { display: flex; justify-content: space-between; gap: 16px; padding: 11px 14px; border: 1px solid #647e86; border-radius: 5px; text-decoration: none; }
+    nav a:hover { background: #264752; border-color: var(--accent); }
+    nav a:focus-visible { outline-color: var(--accent); }
+    nav strong { color: var(--accent); margin-right: 8px; }
+    main { padding-block: 48px 56px; }
+    .section-heading { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 8px 24px; margin-bottom: 24px; }
+    h2 { margin: 0; font-size: 26px; line-height: 1.5; }
+    .section-heading p { margin: 0; color: var(--muted); font-size: 14px; }
+    .products { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; }
+    .product { background: white; border: 1px solid var(--line); border-top: 4px solid var(--product-color); border-radius: 7px; padding: 28px; scroll-margin-top: 24px; }
+    .product:target { outline: 3px solid var(--product-color); outline-offset: 4px; }
+    .ecs { --product-color: #ad4f17; }
+    .oss { --product-color: #247364; }
+    .rds { --product-color: #3c60a5; }
+    .product-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .category { color: var(--product-color); font-size: 12px; font-weight: 750; letter-spacing: .12em; }
+    .number { color: #687980; font-size: 13px; font-variant-numeric: tabular-nums; }
+    h3 { margin: 18px 0 4px; font-size: 34px; line-height: 1.25; }
+    .product-name { margin: 0 0 20px; font-weight: 650; font-size: 18px; }
+    .definition { margin: 0; min-height: 6em; color: var(--muted); }
+    h4 { margin: 24px 0 8px; font-size: 14px; }
+    ul { padding-left: 1.25em; margin: 0; }
+    li { margin-block: 5px; }
+    .boundary { border-top: 1px solid var(--line); padding-top: 16px; margin: 22px 0 0; font-size: 14px; color: var(--muted); }
+    .scenario { display: grid; grid-template-columns: 1fr 2fr; gap: 32px; padding: 32px; margin-top: 36px; background: #e8ede7; border-radius: 7px; }
+    .scenario h2 { font-size: 22px; }
+    .scenario p { margin: 8px 0 0; color: var(--muted); font-size: 14px; }
+    .flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0; align-items: center; }
+    .flow div { border-left: 2px solid #a5b4aa; padding-left: 14px; }
+    dt { font-weight: 750; }
+    dd { margin: 4px 0 0; color: var(--muted); font-size: 14px; }
+    .note { margin: 24px 0 0; color: var(--muted); font-size: 14px; }
+    footer { border-top: 1px solid var(--line); padding-block: 24px; }
+    .footer-inner { display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 16px; font-size: 13px; color: var(--muted); }
+    footer p { margin: 0; }
+    @media (max-width: 800px) {
+      .hero { grid-template-columns: 1fr; gap: 32px; padding-block: 40px; }
+      .route { padding-left: 20px; }
+      .products { grid-template-columns: 1fr; }
+      .definition { min-height: auto; }
+      .scenario { grid-template-columns: 1fr; gap: 24px; }
+    }
+    @media (max-width: 480px) {
+      .wrap { width: calc(100% - 32px); }
+      header { flex-wrap: wrap; gap: 12px; padding-block: 18px; }
+      .brand { font-size: 16px; }
+      .product { padding: 24px; }
+      .scenario { padding: 24px; }
+      .flow { grid-template-columns: 1fr; gap: 20px; }
+      main { padding-block: 32px; }
+    }
+  </style>
+</head>
+<body id="top">
+  <a class="skip" href="#guide">跳到产品指南</a>
+  <div class="masthead">
+    <header class="wrap">
+      <div class="brand"><span aria-hidden="true">[ 云 ]</span>阿里云 · 产品选型指南</div>
+      <span class="tag">非官方演示 / PRODUCT GUIDE</span>
+    </header>
+    <div class="hero wrap">
+      <div>
+        <p class="eyebrow">从需求出发 · 认识三类云服务</p>
+        <h1>应用在哪里跑？<br>数据<span>放在哪里？</span></h1>
+        <p class="intro">先分清计算、对象存储和关系型数据库。用一个简单的选型起点，认识 ECS、OSS 与 RDS 各自负责什么。</p>
+      </div>
+      <div class="route">
+        <p id="navigation-title">你现在需要做什么？选择一项直达介绍</p>
+        <nav aria-labelledby="navigation-title">
+          <a href="#ecs"><span><strong>ECS</strong>运行应用</span><span aria-hidden="true">↗</span></a>
+          <a href="#oss"><span><strong>OSS</strong>存放文件</span><span aria-hidden="true">↗</span></a>
+          <a href="#rds"><span><strong>RDS</strong>管理业务数据</span><span aria-hidden="true">↗</span></a>
+        </nav>
+      </div>
+    </div>
+  </div>
+  <main class="wrap" id="guide">
+    <div class="section-heading">
+      <h2>三种角色，一眼分清</h2>
+      <p>它们并非互相替代，也可以协同使用。</p>
+    </div>
+    <div class="products">
+      <section class="product ecs" id="ecs" aria-labelledby="ecs-title">
+        <div class="product-top"><span class="category">COMPUTE / 计算</span><span class="number">01</span></div>
+        <h3 id="ecs-title">ECS</h3>
+        <p class="product-name">云服务器</p>
+        <p class="definition">提供可配置的计算实例，像一台云上的服务器，用于部署和运行应用程序。</p>
+        <h4>适用场景</h4>
+        <ul><li>部署网站与 API 服务</li><li>搭建应用运行环境</li><li>执行后台计算任务</li></ul>
+        <p class="boundary"><strong>选型提醒：</strong>需要管理操作系统、应用与安全配置；它不是开箱即用的托管数据库。</p>
+      </section>
+      <section class="product oss" id="oss" aria-labelledby="oss-title">
+        <div class="product-top"><span class="category">OBJECT / 对象存储</span><span class="number">02</span></div>
+        <h3 id="oss-title">OSS</h3>
+        <p class="product-name">对象存储</p>
+        <p class="definition">以对象形式存储和访问文件，适合图片、视频等非结构化数据，不负责运行后端代码。</p>
+        <h4>适用场景</h4>
+        <ul><li>存放图片与视频文件</li><li>保存网页静态资源</li><li>归档备份文件</li></ul>
+        <p class="boundary"><strong>选型提醒：</strong>文件访问需要合理配置权限；它不能替代关系型数据库的事务与查询能力。</p>
+      </section>
+      <section class="product rds" id="rds" aria-labelledby="rds-title">
+        <div class="product-top"><span class="category">DATABASE / 数据库</span><span class="number">03</span></div>
+        <h3 id="rds-title">RDS</h3>
+        <p class="product-name">云数据库</p>
+        <p class="definition">提供托管关系型数据库服务，围绕表、关系、查询与事务，管理结构化业务数据。</p>
+        <h4>适用场景</h4>
+        <ul><li>保存订单与用户信息</li><li>处理业务交易与事务</li><li>进行关系型数据查询</li></ul>
+        <p class="boundary"><strong>选型提醒：</strong>仍需设计表结构、访问权限与备份策略；不用于存放任意文件，也不适合所有数据模型。</p>
+      </section>
+    </div>
+    <section class="scenario" aria-labelledby="scenario-title">
+      <div><h2 id="scenario-title">把它们放进一个网站</h2><p>以小型在线商店为例，看清职责分工。</p></div>
+      <dl class="flow">
+        <div><dt>ECS · 运行</dt><dd>运行商店应用<br>处理业务请求</dd></div>
+        <div><dt>OSS · 存储</dt><dd>存放商品图片<br>提供文件访问</dd></div>
+        <div><dt>RDS · 管理</dt><dd>保存订单记录<br>查询用户数据</dd></div>
+      </dl>
+    </section>
+    <p class="note">这只是入门选型思路，不是架构或采购建议。实际选型需结合性能、成本、安全与可用性要求，并以阿里云官方文档及具体产品能力为准。</p>
+  </main>
+  <footer>
+    <div class="wrap footer-inner">
+      <p><strong>非官方演示</strong> · 本页仅用于产品概念介绍，与阿里云官方无隶属关系。</p>
+      <a href="#top">返回顶部 ↑</a>
+    </div>
+  </footer>
+</body>
+</html>
