@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>点击计数器</title>
+</head>
+<body>
+  <h1>点击计数器</h1>
+  <p>当前次数：<output id="count" aria-live="polite">0</output></p>
+  <button type="button" id="increment">加一</button>
+  <script>
+    let count = 0;
+    const countOutput = document.getElementById('count');
+    document.getElementById('increment').addEventListener('click', () => {
+      count += 1;
+      countOutput.textContent = String(count);
+    });
+  </script>
+</body>
+</html>
