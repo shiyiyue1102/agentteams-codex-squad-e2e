@@ -75,7 +75,7 @@ python3 -m unittest discover -s tests -v
 | GET | `/` 与 `/static/*` | 前端页面与静态资源 | 200 |
 
 错误码：`TITLE_REQUIRED`、`TITLE_TOO_LONG`、`INVALID_STATUS`、`INVALID_PRIORITY`、
-`INVALID_BODY`、`INVALID_PARAM`（400)；`NOT_FOUND`（404）；
+`INVALID_BODY`、`INVALID_PARAM`（400）；`NOT_FOUND`（404）；
 `METHOD_NOT_ALLOWED`（405，带 `Allow` 头）；`INTERNAL_ERROR`（500）。
 详细语义与校验顺序见 [docs/SPEC.md](docs/SPEC.md)。
 
