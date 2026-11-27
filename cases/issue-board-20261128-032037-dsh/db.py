@@ -1,57 +1,54 @@
-"""SQLite storage layer for the issue-board demo app.
+"""SQLite 存储层：建表与数据访问（仅 Python 标准库）。
 
-Standard library only. Every public function opens a fresh connection and
-closes it before returning, so the module is safe to use from a threading
-HTTP server (one connection per request/operation).
+契约见 docs/SPEC.md 第 3 节：单表 issues，UTC ISO-8601 秒级时间戳，
+列表固定 ORDER BY created_at DESC, id DESC。
 """
 
 import sqlite3
 from datetime import datetime, timezone
 
-VALID_STATUS = ("todo", "in_progress", "done")
-VALID_PRIORITY = ("low", "medium", "high")
+STATUS_VALUES = ("todo", "in_progress", "done")
+PRIORITY_VALUES = ("low", "medium", "high")
 
-# Schema per section 3 of the shared analysis contract (docs/SPEC.md).
-SCHEMA = """
+SCHEMA_SQL = """
 CREATE TABLE IF NOT EXISTS issues (
     id         INTEGER PRIMARY KEY AUTOINCREMENT,
-    title      TEXT NOT NULL,
+    title      TEXT NOT NULL,                -- trim 后 1..80 个 Unicode 码点
     status     TEXT NOT NULL DEFAULT 'todo'
                CHECK (status IN ('todo', 'in_progress', 'done')),
     priority   TEXT NOT NULL DEFAULT 'medium'
                CHECK (priority IN ('low', 'medium', 'high')),
-    created_at TEXT NOT NULL,
-    updated_at TEXT NOT NULL
+    created_at TEXT NOT NULL,                -- UTC ISO-8601 'YYYY-MM-DDTHH:MM:SSZ'
+    updated_at TEXT NOT NULL                 -- 同上；每次 PUT 成功刷新
 );
 CREATE INDEX IF NOT EXISTS idx_issues_created ON issues (created_at DESC, id DESC);
 CREATE INDEX IF NOT EXISTS idx_issues_status ON issues (status);
 """
 
-_SELECT_COLUMNS = "id, title, status, priority, created_at, updated_at"
 
-
-def utcnow_iso():
-    """UTC ISO-8601 second-precision timestamp, e.g. 2026-11-28T03:20:37Z."""
+def utc_now_iso():
+    """当前 UTC 时间，ISO-8601 秒级字符串（YYYY-MM-DDTHH:MM:SSZ）。"""
     return datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
 
 def connect(db_path):
-    conn = sqlite3.connect(db_path)
+    """每请求新建连接（配合 ThreadingHTTPServer，避免跨线程共享连接）。"""
+    conn = sqlite3.connect(db_path, timeout=10)
     conn.row_factory = sqlite3.Row
     return conn
 
 
 def init_db(db_path):
-    """Idempotent migration: create table/indexes if missing; never drops data."""
+    """幂等迁移：对已存在的库仅补建缺失的表/索引，不清空既有数据。"""
     conn = connect(db_path)
     try:
-        conn.executescript(SCHEMA)
+        conn.executescript(SCHEMA_SQL)
         conn.commit()
     finally:
         conn.close()
 
 
-def _row_to_issue(row):
+def row_to_issue(row):
     return {
         "id": row["id"],
         "title": row["title"],
@@ -62,74 +59,47 @@ def _row_to_issue(row):
     }
 
 
-def create_issue(db_path, title, status, priority):
-    """Insert a new issue and return the stored object."""
-    now = utcnow_iso()
-    conn = connect(db_path)
-    try:
-        cur = conn.execute(
-            "INSERT INTO issues (title, status, priority, created_at, updated_at)"
-            " VALUES (?, ?, ?, ?, ?)",
-            (title, status, priority, now, now),
-        )
-        conn.commit()
-        row = conn.execute(
-            "SELECT " + _SELECT_COLUMNS + " FROM issues WHERE id = ?",
-            (cur.lastrowid,),
-        ).fetchone()
-        return _row_to_issue(row)
-    finally:
-        conn.close()
+def create_issue(conn, title, status, priority):
+    now = utc_now_iso()
+    cur = conn.execute(
+        "INSERT INTO issues (title, status, priority, created_at, updated_at)"
+        " VALUES (?, ?, ?, ?, ?)",
+        (title, status, priority, now, now),
+    )
+    conn.commit()
+    return get_issue_by_id(conn, cur.lastrowid)
 
 
-def get_issue(db_path, issue_id):
-    """Return the issue dict for issue_id, or None when absent."""
-    conn = connect(db_path)
-    try:
-        row = conn.execute(
-            "SELECT " + _SELECT_COLUMNS + " FROM issues WHERE id = ?",
-            (issue_id,),
-        ).fetchone()
-        return _row_to_issue(row) if row is not None else None
-    finally:
-        conn.close()
+def get_issue_by_id(conn, issue_id):
+    row = conn.execute(
+        "SELECT id, title, status, priority, created_at, updated_at"
+        " FROM issues WHERE id = ?",
+        (issue_id,),
+    ).fetchone()
+    return row_to_issue(row) if row is not None else None
 
 
-def update_issue(db_path, issue_id, title, status, priority):
-    """Full update; refreshes updated_at. Returns None when the id is absent."""
-    now = utcnow_iso()
-    conn = connect(db_path)
-    try:
-        cur = conn.execute(
-            "UPDATE issues SET title = ?, status = ?, priority = ?, updated_at = ?"
-            " WHERE id = ?",
-            (title, status, priority, now, issue_id),
-        )
-        conn.commit()
-        if cur.rowcount == 0:
-            return None
-        row = conn.execute(
-            "SELECT " + _SELECT_COLUMNS + " FROM issues WHERE id = ?",
-            (issue_id,),
-        ).fetchone()
-        return _row_to_issue(row) if row is not None else None
-    finally:
-        conn.close()
+def update_issue(conn, issue_id, title, status, priority):
+    """全量更新；成功必刷新 updated_at（同秒内可能等于旧值）。"""
+    now = utc_now_iso()
+    conn.execute(
+        "UPDATE issues SET title = ?, status = ?, priority = ?, updated_at = ?"
+        " WHERE id = ?",
+        (title, status, priority, now, issue_id),
+    )
+    conn.commit()
+    return get_issue_by_id(conn, issue_id)
 
 
-def delete_issue(db_path, issue_id):
-    """Physical delete. Returns True when a row was removed, else False."""
-    conn = connect(db_path)
-    try:
-        cur = conn.execute("DELETE FROM issues WHERE id = ?", (issue_id,))
-        conn.commit()
-        return cur.rowcount > 0
-    finally:
-        conn.close()
+def delete_issue(conn, issue_id):
+    """物理删除；返回是否确实删除了一行（False 即记录不存在）。"""
+    cur = conn.execute("DELETE FROM issues WHERE id = ?", (issue_id,))
+    conn.commit()
+    return cur.rowcount > 0
 
 
 def escape_like(keyword):
-    """Escape \\, % and _ so LIKE matches them literally (ESCAPE '\\')."""
+    r"""转义 LIKE 通配符，使 \ % _ 按字面匹配（配合 ESCAPE '\'）。"""
     return (
         keyword.replace("\\", "\\\\")
         .replace("%", "\\%")
@@ -137,33 +107,31 @@ def escape_like(keyword):
     )
 
 
-def list_issues(db_path, keyword=None, status=None, page=1, page_size=10):
-    """Return (items, total) ordered by created_at DESC, id DESC.
+def list_issues(conn, keyword=None, status=None, page=1, page_size=10):
+    """按条件过滤 + 固定排序 + 分页。
 
-    keyword: substring match on title, %/_ escaped literally, ASCII
-    case-insensitive (SQLite LIKE default). status: exact match. Both filters
-    combine with AND. page is 1-based.
+    返回 (items, total, total_pages)；total/total_pages 针对过滤后的结果集，
+    total=0 时 total_pages=0；越界页返回空 items（不是错误）。
     """
-    clauses = []
+    where = []
     params = []
-    if status:
-        clauses.append("status = ?")
-        params.append(status)
     if keyword:
-        clauses.append("title LIKE ? ESCAPE '\\'")
+        where.append(r"title LIKE ? ESCAPE '\'")
         params.append("%" + escape_like(keyword) + "%")
-    where = (" WHERE " + " AND ".join(clauses)) if clauses else ""
+    if status:
+        where.append("status = ?")
+        params.append(status)
+    where_sql = (" WHERE " + " AND ".join(where)) if where else ""
+
+    total = conn.execute(
+        "SELECT COUNT(*) AS c FROM issues" + where_sql, params
+    ).fetchone()["c"]
+    total_pages = (total + page_size - 1) // page_size if page_size else 0
     offset = (page - 1) * page_size
-    conn = connect(db_path)
-    try:
-        total = conn.execute(
-            "SELECT COUNT(*) FROM issues" + where, params
-        ).fetchone()[0]
-        rows = conn.execute(
-            "SELECT " + _SELECT_COLUMNS + " FROM issues" + where
-            + " ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?",
-            params + [page_size, offset],
-        ).fetchall()
-        return [_row_to_issue(row) for row in rows], total
-    finally:
-        conn.close()
+    rows = conn.execute(
+        "SELECT id, title, status, priority, created_at, updated_at FROM issues"
+        + where_sql
+        + " ORDER BY created_at DESC, id DESC LIMIT ? OFFSET ?",
+        params + [page_size, offset],
+    ).fetchall()
+    return [row_to_issue(r) for r in rows], total, total_pages
