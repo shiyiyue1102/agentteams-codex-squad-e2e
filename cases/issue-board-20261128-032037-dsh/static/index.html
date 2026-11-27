@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>事项管理</title>
+  <link rel="stylesheet" href="/static/app.css">
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>事项管理</h1>
+      <button id="new-issue-btn" type="button">新建事项</button>
+    </header>
+
+    <section id="form-section" class="form-section" hidden aria-label="事项表单">
+      <h2 id="form-title">新建事项</h2>
+      <form id="issue-form" novalidate>
+        <label class="field field-full">
+          <span class="field-label">标题（必填，去除两端空白后 ≤ 80 字）</span>
+          <input id="title-input" type="text" maxlength="80"
+                 placeholder="请输入事项标题" autocomplete="off">
+        </label>
+        <div class="field-row">
+          <label class="field">
+            <span class="field-label">状态</span>
+            <select id="status-input">
+              <option value="todo">待办</option>
+              <option value="in_progress">进行中</option>
+              <option value="done">完成</option>
+            </select>
+          </label>
+          <label class="field">
+            <span class="field-label">优先级</span>
+            <select id="priority-input">
+              <option value="low">低</option>
+              <option value="medium" selected>中</option>
+              <option value="high">高</option>
+            </select>
+          </label>
+        </div>
+        <div class="form-actions">
+          <button type="submit" id="save-btn">保存</button>
+          <button type="button" id="cancel-btn" class="btn-secondary">取消</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="toolbar" aria-label="搜索与筛选">
+      <input id="keyword-input" type="search" placeholder="按标题关键词搜索，回车执行"
+             aria-label="搜索关键词">
+      <button id="search-btn" type="button">搜索</button>
+      <select id="filter-status" aria-label="状态筛选">
+        <option value="">全部状态</option>
+        <option value="todo">待办</option>
+        <option value="in_progress">进行中</option>
+        <option value="done">完成</option>
+      </select>
+      <button id="reset-btn" type="button" class="btn-secondary">重置</button>
+    </section>
+
+    <p id="message" class="message" role="status" hidden></p>
+    <p id="loading" class="loading" role="status" hidden>加载中…</p>
+
+    <ul id="issue-list" class="issue-list" aria-label="事项列表"></ul>
+    <p id="empty-text" class="empty" hidden></p>
+
+    <nav class="pagination" aria-label="分页">
+      <button id="prev-btn" type="button">上一页</button>
+      <span id="page-info"></span>
+      <button id="next-btn" type="button">下一页</button>
+    </nav>
+  </div>
+  <script src="/static/app.js"></script>
+</body>
+</html>
