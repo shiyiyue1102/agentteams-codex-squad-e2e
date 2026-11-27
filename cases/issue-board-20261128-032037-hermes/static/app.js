@@ -45,21 +45,31 @@
     els.loading.classList.toggle("hidden", pending === 0);
   }
 
+  var successTimer = null;
+
   function showSuccess(text) {
     els.successMsg.textContent = text; // textContent：按文字显示
     els.successMsg.classList.remove("hidden");
     els.errorMsg.classList.add("hidden");
+    // 成功提示 3 秒后自动消失（修复 DEF-1：提示不再被 refresh 立即清除）
+    if (successTimer !== null) clearTimeout(successTimer);
+    successTimer = setTimeout(function () {
+      successTimer = null;
+      els.successMsg.classList.add("hidden");
+    }, 3000);
   }
 
   function showError(text) {
     els.errorMsg.textContent = text; // textContent：按文字显示
     els.errorMsg.classList.remove("hidden");
     els.successMsg.classList.add("hidden");
+    if (successTimer !== null) { clearTimeout(successTimer); successTimer = null; }
   }
 
   function clearMessages() {
     els.successMsg.classList.add("hidden");
     els.errorMsg.classList.add("hidden");
+    if (successTimer !== null) { clearTimeout(successTimer); successTimer = null; }
   }
 
   function api(path, options) {
@@ -146,7 +156,9 @@
   }
 
   function refresh() {
-    clearMessages();
+    // DEF-1 修复：不再在 refresh 开头 clearMessages()。
+    // 成功提示由 showSuccess 的 3 秒定时器自动消失；失败提示保留到下次操作；
+    // 用户主动查询（搜索/重置）时才显式清除旧消息。
     return api(buildQuery(), { method: "GET" })
       .then(function (res) {
         var data = res.data;
@@ -241,6 +253,7 @@
   }
 
   function doSearch() {
+    clearMessages(); // 用户主动查询时清除旧的成功/失败提示
     state.keyword = els.searchKeyword.value.trim();
     state.status = els.filterStatus.value;
     state.page = 1;
@@ -248,6 +261,7 @@
   }
 
   function doReset() {
+    clearMessages(); // 用户主动重置时清除旧的成功/失败提示
     els.searchKeyword.value = "";
     els.filterStatus.value = "";
     state.keyword = "";
