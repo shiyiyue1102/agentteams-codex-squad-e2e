@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="本地运行的事项管理应用：新增、编辑、删除、搜索、筛选与分页。">
+<title>事项管理</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="page">
+  <header class="page-header">
+    <h1>事项管理</h1>
+    <p class="subtitle">数据保存在本机 SQLite 文件中，刷新页面与重启服务后仍然保留。</p>
+  </header>
+
+  <section class="card" aria-labelledby="form-heading">
+    <h2 id="form-heading">新增事项</h2>
+    <form id="item-form" data-mode="create" novalidate>
+      <div class="field">
+        <label for="title-input">标题</label>
+        <input id="title-input" name="title" type="text" maxlength="80" placeholder="请输入事项标题" autocomplete="off">
+        <p class="hint">去除两端空白后必填，最多 80 个字符。</p>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="status-select">状态</label>
+          <select id="status-select" name="status">
+            <option value="todo">待办</option>
+            <option value="doing">进行中</option>
+            <option value="done">完成</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="priority-select">优先级</label>
+          <select id="priority-select" name="priority">
+            <option value="low">低</option>
+            <option value="medium">中</option>
+            <option value="high">高</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button id="submit-item" class="btn btn-primary" type="submit" disabled>新增事项</button>
+        <button id="cancel-edit" class="btn" type="button" hidden disabled>取消</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="card" aria-labelledby="list-heading">
+    <h2 id="list-heading">事项列表</h2>
+
+    <div class="toolbar">
+      <div class="field toolbar-search">
+        <label for="search-input">关键词</label>
+        <input id="search-input" type="text" placeholder="按标题搜索" autocomplete="off">
+      </div>
+      <button id="search-button" class="btn" type="button">搜索</button>
+      <div class="field">
+        <label for="filter-status">状态筛选</label>
+        <select id="filter-status">
+          <option value="">全部</option>
+          <option value="todo">待办</option>
+          <option value="doing">进行中</option>
+          <option value="done">完成</option>
+        </select>
+      </div>
+      <div class="field field-narrow">
+        <label for="page-size-select">每页</label>
+        <select id="page-size-select">
+          <option value="10">10</option>
+          <option value="20">20</option>
+          <option value="50">50</option>
+        </select>
+      </div>
+    </div>
+
+    <p id="loading" class="loading">加载中…</p>
+    <p id="message" class="message" role="status" aria-live="polite" hidden></p>
+    <p id="empty-state" class="empty-state" hidden>暂无事项，添加第一条吧</p>
+
+    <ul id="item-list" class="item-list"></ul>
+
+    <div class="pagination">
+      <button id="prev-page" class="btn" type="button" disabled>上一页</button>
+      <p id="page-info" class="page-info">第 1 / 1 页，共 0 条</p>
+      <button id="next-page" class="btn" type="button" disabled>下一页</button>
+    </div>
+  </section>
+
+  <footer class="page-footer">
+    <p>后端：Python 标准库 HTTP 服务 + SQLite；前端：原生 HTML/CSS/JS，无外部依赖。</p>
+  </footer>
+</div>
+
+<div id="confirm-dialog" class="dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-text" hidden>
+  <div class="dialog-box">
+    <p id="confirm-text" class="dialog-text"></p>
+    <div class="dialog-actions">
+      <button id="confirm-yes" class="btn btn-danger" type="button">确认删除</button>
+      <button id="confirm-no" class="btn" type="button">取消</button>
+    </div>
+  </div>
+</div>
+
+<script src="app.js" defer></script>
+</body>
+</html>
