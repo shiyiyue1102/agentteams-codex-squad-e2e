@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>问候验收·补充版</title>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 2rem; }
+  #greeting { min-height: 1.5em; margin-top: 1rem; font-weight: bold; }
+</style>
+</head>
+<body>
+<p id="hello">hello</p>
+<button id="greet-btn" type="button">问候</button>
+<p id="greeting" aria-live="polite"></p>
+<script>
+(function () {
+  var btn = document.getElementById('greet-btn');
+  var greeting = document.getElementById('greeting');
+  btn.addEventListener('click', function () {
+    greeting.textContent = '你好，有什么事';
+  });
+})();
+</script>
+</body>
+</html>
