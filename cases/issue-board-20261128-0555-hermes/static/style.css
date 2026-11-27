@@ -1,0 +1,241 @@
+/* 事项管理应用样式：桌面 + 375px 移动端均无横向溢出 */
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  background: #f4f5f7;
+  color: #24292f;
+  line-height: 1.5;
+}
+
+.container {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 16px;
+}
+
+h1 {
+  font-size: 1.4rem;
+  margin: 8px 0 16px;
+}
+
+.card {
+  background: #fff;
+  border: 1px solid #d8dee4;
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+
+.card h2 {
+  font-size: 1.05rem;
+  margin: 0 0 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 12px;
+  min-width: 0;
+}
+
+.field.grow { flex: 1 1 auto; }
+
+.field label {
+  font-size: 0.85rem;
+  color: #57606a;
+  margin-bottom: 4px;
+}
+
+.req { color: #cf222e; }
+
+input[type="text"],
+input[type="search"],
+select {
+  width: 100%;
+  max-width: 100%;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  background: #fff;
+  color: inherit;
+}
+
+input:focus, select:focus, button:focus {
+  outline: 2px solid #0969da;
+  outline-offset: 1px;
+}
+
+.field-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.field-row .field {
+  flex: 1 1 140px;
+  min-width: 0;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button {
+  padding: 8px 14px;
+  font-size: 0.92rem;
+  border-radius: 6px;
+  border: 1px solid transparent;
+  background: #0969da;
+  color: #fff;
+  cursor: pointer;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+button.secondary {
+  background: #f6f8fa;
+  border-color: #d0d7de;
+  color: #24292f;
+}
+
+button.danger {
+  background: #cf222e;
+}
+
+/* 消息提示 */
+.message {
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  font-size: 0.92rem;
+  border: 1px solid transparent;
+  word-break: break-word;
+}
+
+.message.info    { background: #ddf4ff; border-color: #54aeff; color: #0969da; }
+.message.success { background: #dafbe1; border-color: #4ac26b; color: #116329; }
+.message.error   { background: #ffebe9; border-color: #ff8182; color: #cf222e; }
+
+.hidden { display: none !important; }
+
+/* 加载 / 空态 */
+.loading, .empty {
+  padding: 24px;
+  text-align: center;
+  color: #57606a;
+  font-size: 0.95rem;
+}
+
+/* 列表 */
+.item-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 12px 0;
+  border-bottom: 1px solid #eaeef2;
+  flex-wrap: wrap;
+}
+
+.item:last-child { border-bottom: none; }
+
+.item-main {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+
+.item-title {
+  font-weight: 600;
+  word-break: break-word;
+  display: block;
+}
+
+.item-meta {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+  align-items: center;
+}
+
+.badge {
+  display: inline-block;
+  padding: 1px 8px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  border: 1px solid transparent;
+  white-space: nowrap;
+}
+
+.status-todo  { background: #f6f8fa; border-color: #d0d7de; color: #57606a; }
+.status-doing { background: #ddf4ff; border-color: #54aeff; color: #0969da; }
+.status-done  { background: #dafbe1; border-color: #4ac26b; color: #116329; }
+
+.priority-low    { background: #f6f8fa; border-color: #d0d7de; color: #57606a; }
+.priority-medium { background: #fff8c5; border-color: #d4a72c; color: #6a5200; }
+.priority-high   { background: #ffebe9; border-color: #ff8182; color: #cf222e; }
+
+.item-time {
+  font-size: 0.75rem;
+  color: #8c959f;
+}
+
+.item-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* 分页 */
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding-top: 14px;
+  flex-wrap: wrap;
+}
+
+#page-info {
+  font-size: 0.88rem;
+  color: #57606a;
+}
+
+/* 375px 窄屏：保持纵向排布，不产生横向溢出 */
+@media (max-width: 480px) {
+  .container { padding: 10px; }
+
+  .field-row { flex-direction: column; gap: 0; }
+
+  .item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .item-actions {
+    justify-content: flex-end;
+  }
+
+  button {
+    padding: 8px 12px;
+  }
+}
