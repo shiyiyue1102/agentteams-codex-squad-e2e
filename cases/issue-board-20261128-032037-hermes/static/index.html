@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>事项管理 · Issue Board</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="topbar">
+  <h1>事项管理</h1>
+</header>
+
+<main class="container">
+  <!-- 新增表单 -->
+  <section class="card" aria-label="新增事项">
+    <h2>新增事项</h2>
+    <form id="create-form" autocomplete="off">
+      <div class="form-row">
+        <label for="new-title" class="field-grow">标题
+          <input id="new-title" type="text" maxlength="120" placeholder="输入事项标题（必填，≤80字）">
+        </label>
+        <label class="field">优先级
+          <select id="new-priority">
+            <option value="low">低</option>
+            <option value="medium" selected>中</option>
+            <option value="high">高</option>
+          </select>
+        </label>
+        <button type="submit" id="create-btn">新增</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- 搜索 / 筛选 -->
+  <section class="card" aria-label="搜索与筛选">
+    <div class="form-row toolbar">
+      <label for="search-keyword" class="field-grow">关键词
+        <input id="search-keyword" type="search" placeholder="按标题搜索…">
+      </label>
+      <label class="field">状态
+        <select id="filter-status">
+          <option value="">全部</option>
+          <option value="todo">待办</option>
+          <option value="in_progress">进行中</option>
+          <option value="done">完成</option>
+        </select>
+      </label>
+      <button type="button" id="search-btn">搜索</button>
+      <button type="button" id="reset-btn" class="secondary">重置</button>
+    </div>
+  </section>
+
+  <!-- 消息区：加载状态 / 操作结果 / 失败原因 -->
+  <div id="loading" class="msg loading hidden" role="status">加载中…</div>
+  <div id="success-msg" class="msg success hidden" role="status"></div>
+  <div id="error-msg" class="msg error hidden" role="alert"></div>
+
+  <!-- 列表 -->
+  <section class="card" aria-label="事项列表">
+    <div id="empty-state" class="empty hidden">暂无事项。先在上方新增一条吧（或调整搜索/筛选条件）。</div>
+    <ul id="item-list" class="item-list"></ul>
+
+    <nav class="pager" aria-label="分页">
+      <button type="button" id="prev-page">上一页</button>
+      <span id="page-info">第 0 / 0 页 · 共 0 条</span>
+      <button type="button" id="next-page">下一页</button>
+    </nav>
+  </section>
+</main>
+
+<!-- 编辑弹层 -->
+<div id="edit-overlay" class="overlay hidden">
+  <div class="dialog card" role="dialog" aria-modal="true" aria-label="编辑事项">
+    <h2>编辑事项 <span id="edit-id"></span></h2>
+    <form id="edit-form">
+      <label class="stacked">标题
+        <input id="edit-title" type="text" maxlength="120">
+      </label>
+      <div class="form-row">
+        <label class="field-grow">状态
+          <select id="edit-status">
+            <option value="todo">待办</option>
+            <option value="in_progress">进行中</option>
+            <option value="done">完成</option>
+          </select>
+        </label>
+        <label class="field-grow">优先级
+          <select id="edit-priority">
+            <option value="low">低</option>
+            <option value="medium">中</option>
+            <option value="high">高</option>
+          </select>
+        </label>
+      </div>
+      <div class="form-row dialog-actions">
+        <button type="submit" id="edit-save-btn">保存</button>
+        <button type="button" id="edit-cancel-btn" class="secondary">取消</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
