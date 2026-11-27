@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>事项管理</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="container">
+  <h1>事项管理</h1>
+
+  <section class="card" aria-label="事项表单">
+    <h2 id="form-title">新增事项</h2>
+    <form id="item-form" novalidate>
+      <div class="field field-title">
+        <label for="title-input">标题 <span class="hint">（必填，去空白后不超过 80 字）</span></label>
+        <input id="title-input" name="title" type="text" maxlength="200"
+               placeholder="输入事项标题" autocomplete="off">
+      </div>
+      <div class="field">
+        <label for="status-input">状态</label>
+        <select id="status-input" name="status">
+          <option value="todo" selected>待办</option>
+          <option value="doing">进行中</option>
+          <option value="done">完成</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="priority-input">优先级</label>
+        <select id="priority-input" name="priority">
+          <option value="low">低</option>
+          <option value="medium" selected>中</option>
+          <option value="high">高</option>
+        </select>
+      </div>
+      <div class="field actions">
+        <button type="submit" id="submit-btn">创建</button>
+        <button type="button" id="cancel-edit-btn" class="secondary" hidden>取消编辑</button>
+      </div>
+    </form>
+    <p id="feedback" class="feedback" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="card" aria-label="事项列表">
+    <div class="toolbar">
+      <div class="field search-field">
+        <label for="search-input">关键词搜索</label>
+        <input id="search-input" type="search" placeholder="按标题关键词搜索（回车或点搜索）">
+      </div>
+      <div class="field filter-field">
+        <label for="filter-status">状态筛选</label>
+        <select id="filter-status">
+          <option value="" selected>全部</option>
+          <option value="todo">待办</option>
+          <option value="doing">进行中</option>
+          <option value="done">完成</option>
+        </select>
+      </div>
+      <div class="field actions">
+        <button type="button" id="search-btn">搜索</button>
+      </div>
+    </div>
+
+    <p id="list-status" class="list-status" role="status" aria-live="polite"></p>
+    <ul id="item-list" class="item-list"></ul>
+    <p id="empty-state" class="empty-state" hidden>暂无事项。可以在上方创建一个；若正在搜索或筛选，则表示没有匹配结果。</p>
+
+    <nav class="pagination" aria-label="分页">
+      <button type="button" id="prev-btn">上一页</button>
+      <span id="page-info">第 0 / 0 页</span>
+      <button type="button" id="next-btn">下一页</button>
+      <span id="total-info"></span>
+    </nav>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
