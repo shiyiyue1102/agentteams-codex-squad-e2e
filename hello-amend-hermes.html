@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>问候验收·补充版</title>
+</head>
+<body>
+  <h1>hello</h1>
+  <button id="greet" type="button">问候</button>
+  <p id="greeting" aria-live="polite" hidden>你好，有什么事</p>
+  <script>
+    document.getElementById('greet').addEventListener('click', () => {
+      document.getElementById('greeting').hidden = false;
+    });
+  </script>
+</body>
+</html>
