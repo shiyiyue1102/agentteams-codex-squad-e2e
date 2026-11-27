@@ -1,0 +1,4 @@
+# 运行时生成的数据库与 Python 缓存不入库
+data/
+__pycache__/
+*.pyc
