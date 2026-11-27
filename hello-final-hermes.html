@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>问候验收</title>
+</head>
+<body>
+  <p>hello</p>
+  <button id="greet" type="button">问候</button>
+  <p id="greeting" role="status" hidden></p>
+  <script>
+    const greeting = document.getElementById('greeting');
+    document.getElementById('greet').addEventListener('click', () => {
+      greeting.textContent = '你好，有什么事';
+      greeting.hidden = false;
+    });
+  </script>
+</body>
+</html>
