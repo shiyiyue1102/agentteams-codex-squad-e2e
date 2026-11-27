@@ -49,6 +49,10 @@ function setLoading(on) {
 }
 
 function apiErrorText(err) {
+  // api() 抛出的是 Error 实例：其 .message 已是 API 返回的具体失败原因，
+  // 原始响应体挂在 .payload 上。修复 D-1：先取 Error 实例的具体 message，
+  // 再兼容直接传入原始响应体对象的场景，最后才回落到通用文案。
+  if (err instanceof Error && err.message) return err.message;
   if (err && err.error && err.error.message) return err.error.message;
   return '请求失败，请稍后重试';
 }
