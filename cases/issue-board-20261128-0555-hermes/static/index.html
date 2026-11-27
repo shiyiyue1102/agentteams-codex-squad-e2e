@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>事项管理 · Issue Board</title>
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <main class="container">
+    <h1>事项管理</h1>
+
+    <!-- 提示区：加载中 / 操作结果 / 失败原因 -->
+    <div id="message" class="message hidden" role="status" aria-live="polite"></div>
+
+    <!-- 新增 / 编辑表单 -->
+    <section class="card form-card">
+      <h2 id="form-title">新增事项</h2>
+      <form id="item-form" novalidate>
+        <input type="hidden" id="edit-id" value="">
+        <div class="field">
+          <label for="title-input">标题 <span class="req">*</span>（≤80 字符）</label>
+          <input type="text" id="title-input" maxlength="120" placeholder="输入事项标题" autocomplete="off">
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label for="status-input">状态</label>
+            <select id="status-input">
+              <option value="todo">待办</option>
+              <option value="doing">进行中</option>
+              <option value="done">完成</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="priority-input">优先级</label>
+            <select id="priority-input">
+              <option value="low">低</option>
+              <option value="medium" selected>中</option>
+              <option value="high">高</option>
+            </select>
+          </div>
+        </div>
+        <div class="actions">
+          <button type="submit" id="submit-btn">新增</button>
+          <button type="button" id="cancel-edit-btn" class="secondary hidden">取消编辑</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- 搜索与筛选 -->
+    <section class="card filter-card">
+      <div class="field-row">
+        <div class="field grow">
+          <label for="search-input">关键词搜索</label>
+          <input type="search" id="search-input" placeholder="按标题搜索…" autocomplete="off">
+        </div>
+        <div class="field">
+          <label for="filter-status">状态筛选</label>
+          <select id="filter-status">
+            <option value="">全部</option>
+            <option value="todo">待办</option>
+            <option value="doing">进行中</option>
+            <option value="done">完成</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- 列表 -->
+    <section class="card list-card">
+      <div id="loading" class="loading hidden">加载中…</div>
+      <div id="empty" class="empty hidden">暂无事项，先在上方新增一条吧。</div>
+      <ul id="item-list" class="item-list"></ul>
+
+      <div id="pagination" class="pagination hidden">
+        <button type="button" id="prev-btn">上一页</button>
+        <span id="page-info"></span>
+        <button type="button" id="next-btn">下一页</button>
+      </div>
+    </section>
+  </main>
+
+  <script src="/app.js"></script>
+</body>
+</html>
