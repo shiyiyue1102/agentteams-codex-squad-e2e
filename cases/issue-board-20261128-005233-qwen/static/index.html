@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>事项管理 · Issue Board</title>
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <main class="container">
+    <h1>事项管理</h1>
+
+    <!-- 操作结果 / 失败原因提示区（独立可见，不遮挡页面） -->
+    <p id="message" class="message info" role="status" aria-live="polite" hidden></p>
+
+    <!-- 新增表单 -->
+    <section class="panel" aria-labelledby="add-heading">
+      <h2 id="add-heading">新增事项</h2>
+      <form id="add-form" novalidate>
+        <div class="row">
+          <div class="field field-title">
+            <label for="add-title">标题（必填，去除两端空白后 ≤80 字）</label>
+            <input id="add-title" name="title" type="text"
+                   placeholder="例如：完成验收报告" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="add-status">状态</label>
+            <select id="add-status" name="status">
+              <option value="todo" selected>待办</option>
+              <option value="doing">进行中</option>
+              <option value="done">完成</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="add-priority">优先级</label>
+            <select id="add-priority" name="priority">
+              <option value="high">高</option>
+              <option value="medium" selected>中</option>
+              <option value="low">低</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button id="add-submit" type="submit">新增</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- 编辑面板（点击「编辑」后出现，预填当前值） -->
+    <section class="panel" id="edit-panel" aria-labelledby="edit-heading" hidden>
+      <h2 id="edit-heading">编辑事项 #<span id="edit-id"></span></h2>
+      <form id="edit-form" novalidate>
+        <div class="row">
+          <div class="field field-title">
+            <label for="edit-title">标题（必填，去除两端空白后 ≤80 字）</label>
+            <input id="edit-title" name="title" type="text" autocomplete="off">
+          </div>
+          <div class="field">
+            <label for="edit-status">状态</label>
+            <select id="edit-status" name="status">
+              <option value="todo">待办</option>
+              <option value="doing">进行中</option>
+              <option value="done">完成</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="edit-priority">优先级</label>
+            <select id="edit-priority" name="priority">
+              <option value="high">高</option>
+              <option value="medium">中</option>
+              <option value="low">低</option>
+            </select>
+          </div>
+          <div class="form-actions">
+            <button id="edit-submit" type="submit">保存</button>
+            <button id="edit-cancel" type="button" class="secondary">取消</button>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <!-- 列表：搜索 + 状态筛选 + 分页 -->
+    <section class="panel" aria-labelledby="list-heading">
+      <h2 id="list-heading">事项列表</h2>
+      <div class="toolbar">
+        <input id="search-input" type="search"
+               placeholder="按标题关键词搜索，回车确认" autocomplete="off"
+               aria-label="按标题关键词搜索">
+        <button id="search-button" type="button">搜索</button>
+        <select id="status-filter" aria-label="按状态筛选">
+          <option value="" selected>全部状态</option>
+          <option value="todo">待办</option>
+          <option value="doing">进行中</option>
+          <option value="done">完成</option>
+        </select>
+      </div>
+
+      <p id="loading" hidden>加载中…</p>
+      <ul id="item-list"></ul>
+      <p id="empty-state" hidden></p>
+
+      <div class="pagination">
+        <button id="prev-page" type="button" class="secondary">上一页</button>
+        <span id="page-info"></span>
+        <button id="next-page" type="button" class="secondary">下一页</button>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
