@@ -2,7 +2,6 @@
 
 import json
 import os
-import posixpath
 import traceback
 import urllib.parse
 from http.server import BaseHTTPRequestHandler
@@ -25,25 +24,35 @@ CONTENT_TYPES = {
 ITEMS_PREFIX = "/api/items/"
 
 
-def normalize_path(raw_path):
-    """URL 解码 + 规范化，供路由与静态穿越防护使用。"""
-    path = posixpath.normpath(urllib.parse.unquote(raw_path))
-    while path.startswith("//"):
-        path = path[1:]
+def decode_path(raw_path):
+    """URL 解码，保留字面分段与尾斜杠，供路由匹配与静态解析使用。
+
+    不做 ``normpath`` 折叠：``/api/items/`` 的空 ``{id}`` 与 ``/api/items/1/`` 的
+    尾斜杠必须按字面进入路由，否则会被吞并成集合路径（分析报告 §5.0 / §5.4）。
+    静态穿越防护由 ``resolve_static`` 的 realpath 校验独立保证，不依赖本函数。
+    """
+    path = urllib.parse.unquote(raw_path)
     if not path.startswith("/"):
         path = "/" + path
     return path
 
 
 def classify_path(path):
-    """返回 (kind, raw_id)，kind ∈ meta / collection / item / unknown_api。"""
+    """返回 (kind, raw_id)，kind ∈ meta / collection / item / unknown_api。
+
+    只接受契约定义的字面形状：``/api/meta``、``/api/items`` 与 ``/api/items/{id}``。
+    ``{id}`` 必须是单个分段，允许为空串（``/api/items/``）；此时仍按 ``{id}`` 路由
+    处理，由 ``service.parse_item_id`` 判 400 ``INVALID_ID``。带尾斜杠或多余分段的
+    路径（``/api/items/1/``、``/api/items//1``、``/api/items/%2f``、``/api/meta/``）
+    属未定义路径，返回 404 ``NOT_FOUND``。
+    """
     if path == "/api/meta":
         return "meta", None
-    if path in ("/api/items", "/api/items/"):
+    if path == "/api/items":
         return "collection", None
     if path.startswith(ITEMS_PREFIX):
         rest = path[len(ITEMS_PREFIX):]
-        if rest and "/" not in rest:
+        if "/" not in rest:
             return "item", rest
     return "unknown_api", None
 
@@ -99,7 +108,7 @@ def make_handler(database):
         def _dispatch(self, method):
             try:
                 parsed = urllib.parse.urlsplit(self.path)
-                path = normalize_path(parsed.path)
+                path = decode_path(parsed.path)
                 if path == "/api" or path.startswith("/api/"):
                     self._handle_api(method, path, parsed.query)
                 else:
