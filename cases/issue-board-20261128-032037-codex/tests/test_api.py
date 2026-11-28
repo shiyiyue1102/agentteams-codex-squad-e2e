@@ -361,16 +361,57 @@ class TitleBoundaryTests(ServerTestCase):
 
 class EnumValidationTests(ServerTestCase):
     def test_invalid_status_values(self):
-        for value in ("TODO", "pending", "", 123, True):
+        """字符串但不在枚举内 → INVALID_STATUS（大小写敏感，含尾随空白）。"""
+        for value in ("TODO", "pending", "", "done ", "todo\n"):
             status, _, envelope = self.api("POST", "/api/v1/items", {"title": "状态非法", "status": value})
             self.assert_error(status, envelope, "INVALID_STATUS", field="status")
+            self.assertEqual(envelope["error"]["details"]["allowed"], ["todo", "doing", "done"])
         item = self.create("null 走默认值", status=None)
         self.assertEqual(item["status"], "todo")
 
     def test_invalid_priority_values(self):
-        for value in ("urgent", "MEDIUM", "", 2):
+        for value in ("urgent", "MEDIUM", "", "high5"):
             status, _, envelope = self.api("POST", "/api/v1/items", {"title": "优先级非法", "priority": value})
             self.assert_error(status, envelope, "INVALID_PRIORITY", field="priority")
+            self.assertEqual(envelope["error"]["details"]["allowed"], ["low", "medium", "high"])
+        item = self.create("null 走默认值", priority=None)
+        self.assertEqual(item["priority"], "medium")
+
+    def test_non_string_status_is_invalid_body(self):
+        """契约 6.2 类型行 + 4.4 校验顺序②：非字符串 status 先判类型 → INVALID_BODY。"""
+        for value in (123, 1, True, [], {}, 1.5):
+            status, _, envelope = self.api("POST", "/api/v1/items", {"title": "状态类型非法", "status": value})
+            self.assert_error(status, envelope, "INVALID_BODY", field="status")
+        _, _, listing = self.api("GET", "/api/v1/items")
+        self.assertEqual(listing["data"]["total"], 0, "非法值不得入库")
+
+    def test_non_string_priority_is_invalid_body(self):
+        for value in (2, True, [], {"level": 1}, 1.5):
+            status, _, envelope = self.api("POST", "/api/v1/items", {"title": "优先级类型非法", "priority": value})
+            self.assert_error(status, envelope, "INVALID_BODY", field="priority")
+        _, _, listing = self.api("GET", "/api/v1/items")
+        self.assertEqual(listing["data"]["total"], 0, "非法值不得入库")
+
+    def test_non_string_enum_on_put_is_invalid_body_and_keeps_record(self):
+        item = self.create("PUT 类型非法", status="todo", priority="low")
+        for field_name, value in (
+            ("status", 123),
+            ("status", True),
+            ("status", []),
+            ("priority", 2),
+            ("priority", {"level": 1}),
+        ):
+            payload = {"title": "PUT 类型非法", field_name: value}
+            status, _, envelope = self.api("PUT", "/api/v1/items/%d" % item["id"], payload)
+            self.assert_error(status, envelope, "INVALID_BODY", field=field_name)
+        _, _, current = self.api("GET", "/api/v1/items/%d" % item["id"])
+        self.assertEqual(current["data"]["status"], "todo", "非法 PUT 不得改动原值")
+        self.assertEqual(current["data"]["priority"], "low")
+
+    def test_non_string_enum_on_missing_record_is_still_404(self):
+        """D6 顺序不变：存在性先于字段校验，非字符串枚举也不例外。"""
+        status, _, envelope = self.api("PUT", "/api/v1/items/999999", {"title": "存在性优先", "status": 123})
+        self.assert_error(status, envelope, "ITEM_NOT_FOUND", field="id", http_status=404)
 
     def test_status_is_checked_before_priority(self):
         status, _, envelope = self.api(
