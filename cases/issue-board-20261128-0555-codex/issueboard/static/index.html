@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>事项管理</title>
+<link rel="icon" href="data:,">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<main class="app">
+  <header class="app-header">
+    <h1 class="app-title">事项管理</h1>
+    <p class="app-subtitle">新增、编辑、删除事项，支持关键词搜索、状态筛选与分页；数据保存在本地 SQLite。</p>
+  </header>
+
+  <section class="panel" aria-labelledby="create-heading">
+    <h2 class="panel-title" id="create-heading">新增事项</h2>
+    <form class="form" id="create-form" novalidate>
+      <div class="field field-grow">
+        <label for="title-input">标题</label>
+        <input autocomplete="off" data-testid="title-input" id="title-input"
+               placeholder="例如：买牛奶（最多 80 字）" type="text">
+      </div>
+      <div class="field">
+        <label for="status-select">状态</label>
+        <select data-testid="status-select" id="status-select">
+          <option value="todo" selected>待办</option>
+          <option value="in_progress">进行中</option>
+          <option value="done">完成</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="priority-select">优先级</label>
+        <select data-testid="priority-select" id="priority-select">
+          <option value="low">低</option>
+          <option value="medium" selected>中</option>
+          <option value="high">高</option>
+        </select>
+      </div>
+      <div class="field field-action">
+        <button data-testid="create-submit" id="create-submit" type="submit">新增</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel" aria-labelledby="filter-heading">
+    <h2 class="panel-title" id="filter-heading">搜索与筛选</h2>
+    <form class="form toolbar" id="filter-form" novalidate>
+      <div class="field field-grow">
+        <label for="search-input">关键词</label>
+        <input autocomplete="off" data-testid="search-input" id="search-input"
+               placeholder="按标题搜索" type="text">
+      </div>
+      <div class="field">
+        <label for="status-filter">状态筛选</label>
+        <select data-testid="status-filter" id="status-filter">
+          <option value="all" selected>全部</option>
+          <option value="todo">待办</option>
+          <option value="in_progress">进行中</option>
+          <option value="done">完成</option>
+        </select>
+      </div>
+      <div class="field field-action">
+        <button data-testid="search-submit" id="search-submit" type="submit">搜索</button>
+      </div>
+      <div class="field field-action">
+        <button data-testid="filter-reset" id="filter-reset" type="button">重置</button>
+      </div>
+    </form>
+  </section>
+
+  <div class="message message-hidden" data-message-kind="info" data-testid="message-area"
+       id="message-area" role="status"></div>
+
+  <section class="panel" aria-labelledby="list-heading" id="list-panel">
+    <h2 class="panel-title" id="list-heading">事项列表</h2>
+    <ul aria-busy="false" class="item-list" data-testid="item-list" id="item-list"></ul>
+    <nav class="pagination" aria-label="分页">
+      <button data-testid="page-prev" id="page-prev" type="button" disabled>上一页</button>
+      <span class="page-info" data-testid="page-info" id="page-info">第 1 / 1 页，共 0 条</span>
+      <button data-testid="page-next" id="page-next" type="button" disabled>下一页</button>
+    </nav>
+  </section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
