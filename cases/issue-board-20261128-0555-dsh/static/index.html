@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>事项管理</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>事项管理</h1>
+
+    <div id="message" class="msg" role="status" aria-live="polite" hidden></div>
+    <div id="loading" hidden>加载中…</div>
+
+    <section class="card" aria-labelledby="form-heading">
+      <h2 id="form-heading">新增事项</h2>
+      <form id="item-form" autocomplete="off">
+        <div class="form-row grow">
+          <label for="title-input">标题</label>
+          <input id="title-input" name="title" type="text" maxlength="80"
+                 placeholder="事项标题（必填，去除空白后 1–80 字）">
+        </div>
+        <div class="form-row">
+          <label for="status-input">状态</label>
+          <select id="status-input" name="status">
+            <option value="todo" selected>待办</option>
+            <option value="in_progress">进行中</option>
+            <option value="done">完成</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="priority-input">优先级</label>
+          <select id="priority-input" name="priority">
+            <option value="high">高</option>
+            <option value="medium" selected>中</option>
+            <option value="low">低</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button id="submit-btn" type="submit">新增事项</button>
+          <button id="cancel-edit-btn" type="button" hidden>取消编辑</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="search-heading">
+      <h2 id="search-heading">搜索与筛选</h2>
+      <form id="search-form" autocomplete="off">
+        <div class="form-row grow">
+          <label for="q-input">关键词</label>
+          <input id="q-input" name="q" type="text" placeholder="按标题关键词搜索">
+        </div>
+        <div class="form-row">
+          <label for="filter-status">状态筛选</label>
+          <select id="filter-status" name="status">
+            <option value="" selected>全部状态</option>
+            <option value="todo">待办</option>
+            <option value="in_progress">进行中</option>
+            <option value="done">完成</option>
+          </select>
+        </div>
+        <div class="form-actions">
+          <button id="search-btn" type="submit">搜索</button>
+          <button id="reset-search-btn" type="button">重置</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="card" aria-labelledby="list-heading">
+      <h2 id="list-heading">事项列表</h2>
+      <ul id="item-list"></ul>
+      <p id="empty-state" hidden>暂无事项</p>
+      <div id="pagination">
+        <button id="prev-btn" type="button">上一页</button>
+        <span id="page-info" aria-live="polite"></span>
+        <button id="next-btn" type="button">下一页</button>
+      </div>
+    </section>
+
+    <footer class="footnote">数据保存在服务端 SQLite 文件中，刷新或重启服务后仍会保留。</footer>
+  </div>
+  <script src="/app.js"></script>
+</body>
+</html>
