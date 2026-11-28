@@ -69,13 +69,14 @@ cd cases/issue-board-20261128-0555-codex
 python3 -m unittest discover -s tests -t . -v
 ```
 
-自测（`tests/test_api.py`，42 个用例）在 `tempfile.mkdtemp()` 创建的临时目录中建立
+自测（`tests/test_api.py`，44 个用例）在 `tempfile.mkdtemp()` 创建的临时目录中建立
 文件数据库，用 `ThreadingHTTPServer(('127.0.0.1', 0), handler)` 绑定空闲端口，通过
 `urllib.request` 与原始 socket 发送真实 HTTP 请求，`tearDown` 中停止服务并只删除自己
 创建的临时目录。覆盖：契约与表结构、新增与标题 strip/长度边界、非法状态与优先级、
-非法 JSON 与多余字段、校验失败不写库、编辑与删除、404/400/405、搜索（含 `%`、`_`、
-`\` 字面量转义与 ASCII 大小写不敏感）、状态筛选与组合 AND、分页派生字段与非法分页、
-默认排序与翻页无重复无遗漏、重启持久化、413、静态穿越防护、UTF-8 往返、500 统一错误体。
+非法 JSON 与多余字段、校验失败不写库、编辑与删除、404/400/405、空 id 与尾斜杠路径口径、
+搜索（含 `%`、`_`、`\` 字面量转义与 ASCII 大小写不敏感）、状态筛选与组合 AND、分页派生字段
+与非法分页、默认排序与翻页无重复无遗漏、重启持久化、413、静态穿越防护、UTF-8 往返、
+500 统一错误体。
 
 ## 7. 接口速览
 
@@ -121,6 +122,13 @@ curl -sS -X DELETE http://127.0.0.1:8000/api/items/1
 `METHOD_NOT_ALLOWED`(405，带 `Allow` 头)、`PAYLOAD_TOO_LARGE`(413)、
 `INTERNAL_ERROR`(500)。校验顺序：请求体大小 → id 格式 → JSON 格式 → 未知字段 →
 标题 → 状态 → 优先级 → 记录是否存在；校验失败不会产生任何写入。
+
+路径匹配口径：路由按 URL 解码后的**字面分段**匹配，不做尾斜杠吞并，也不做 `.`/`..` 折叠。
+`/api/items/{id}` 的 `{id}` 必须是单个分段；`/api/items/`（`{id}` 为空）仍按 `{id}` 路由处理，
+`GET`/`PUT`/`DELETE` 返回 400 `INVALID_ID`，`POST` 返回 405 + `Allow: GET, PUT, DELETE`
+且不产生任何写入。带尾斜杠或多余分段的路径（`/api/items/1/`、`/api/items//1`、
+`/api/items/%2f`、`/api/meta/`）属未定义路径，返回 404 `NOT_FOUND`。静态资源穿越
+（如 `/../server.py`）由 realpath 校验拦截，返回 404 纯文本。
 
 ## 8. 约束声明
 
