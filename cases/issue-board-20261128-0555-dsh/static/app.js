@@ -229,7 +229,7 @@ function startEdit(item) {
   els["form-heading"].textContent = "编辑事项 #" + item.id;
   els["submit-btn"].textContent = "保存修改";
   els["cancel-edit-btn"].hidden = false;
-  showMessage("info", "正在编辑事项 #" + item.id + "，修改后点击「保存修改」。")
+  showMessage("info", "正在编辑事项 #" + item.id + "，修改后点击「保存修改」。");
   els["item-form"].scrollIntoView({ block: "start" });
   els["title-input"].focus();
 }
