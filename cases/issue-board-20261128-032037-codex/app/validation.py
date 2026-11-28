@@ -62,21 +62,25 @@ def normalize_title(payload):
 
 
 def parse_status(payload, default):
-    """POST/PUT 的 status：键缺失或 null → default；否则必须是枚举值（大小写敏感）。"""
+    """POST/PUT 的 status：键缺失或 null → default；非字符串 → INVALID_BODY；否则必须是枚举值（大小写敏感）。"""
     if "status" not in payload or payload["status"] is None:
         return default
     value = payload["status"]
-    if not isinstance(value, str) or value not in STATUS_VALUES:
+    if not isinstance(value, str):
+        raise ApiError(INVALID_BODY, field="status")
+    if value not in STATUS_VALUES:
         raise ApiError(INVALID_STATUS, field="status", details={"allowed": list(STATUS_VALUES)})
     return value
 
 
 def parse_priority(payload, default):
-    """POST/PUT 的 priority：键缺失或 null → default；否则必须是枚举值（大小写敏感）。"""
+    """POST/PUT 的 priority：键缺失或 null → default；非字符串 → INVALID_BODY；否则必须是枚举值（大小写敏感）。"""
     if "priority" not in payload or payload["priority"] is None:
         return default
     value = payload["priority"]
-    if not isinstance(value, str) or value not in PRIORITY_VALUES:
+    if not isinstance(value, str):
+        raise ApiError(INVALID_BODY, field="priority")
+    if value not in PRIORITY_VALUES:
         raise ApiError(INVALID_PRIORITY, field="priority", details={"allowed": list(PRIORITY_VALUES)})
     return value
 
