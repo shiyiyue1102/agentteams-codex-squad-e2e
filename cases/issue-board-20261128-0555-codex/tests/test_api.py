@@ -305,7 +305,7 @@ class TestCreateItem(ApiTestCase):
         self.assert_error(response, 413, "PAYLOAD_TOO_LARGE", None)
 
     def test_html_title_is_legal_and_returned_raw(self):
-        for title in ("<img src=x onerror=alert(1)>", "<script>alert(1)</script>", '"<svg/onload=alert(1)>'):
+        for title in ("<img src=x onerror=alert(1)>", "<script>alert(1)</script>", '"><svg/onload=alert(1)>'):
             item = self.create(title=title)
             self.assertEqual(item["title"], title)
             fetched = self.call("GET", "/api/items/{0}".format(item["id"]))
