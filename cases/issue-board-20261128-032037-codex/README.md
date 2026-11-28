@@ -98,8 +98,9 @@ cd cases/issue-board-20261128-032037-codex
 python3 -B -m unittest discover -s tests -v
 ```
 
-- 共 **38** 个用例，覆盖新增/列表/详情/编辑/删除、搜索与筛选、分页边界、标题边界
-  （空 / 纯空白 / 80 / 81 / emoji）、非法枚举、非法请求体、1 MiB 体积上限、
+- 共 **42** 个用例，覆盖新增/列表/详情/编辑/删除、搜索与筛选、分页边界、标题边界
+  （空 / 纯空白 / 80 / 81 / emoji）、非法枚举（字符串非法值 → `INVALID_STATUS`/
+  `INVALID_PRIORITY`；非字符串值 → `INVALID_BODY`）、非法请求体、1 MiB 体积上限、
   非法与不存在 id、PUT 校验顺序、路由与 405 `Allow` 头、静态资源白名单与路径穿越、
   错误响应体不泄漏内部信息、**重启后数据保留**。
 - 每个用例都在 `tempfile.TemporaryDirectory()` 内建独立数据库，并用
@@ -141,11 +142,11 @@ Item 对象：
 
 | HTTP | `code` | 触发场景 | `field` |
 |---|---|---|---|
-| 400 | `INVALID_BODY` | 空 body / 非法 JSON / 顶层非对象 / `title` 不是字符串（含 `null`） | 出错字段或省略 |
+| 400 | `INVALID_BODY` | 空 body / 非法 JSON / 顶层非对象 / `title` 不是字符串（含 `null`）/ `status`、`priority` 不是字符串（如 `123`、`true`、`[]`、`{}`；显式 `null` 表示走默认值） | 出错字段或省略 |
 | 400 | `TITLE_REQUIRED` | `title` 缺失、`""`、纯空白（含全角空格） | `title` |
 | 400 | `TITLE_TOO_LONG` | strip 后长度 > 80（按 Unicode 码点计） | `title` |
-| 400 | `INVALID_STATUS` | `status` 不是 `todo`/`doing`/`done`（大小写敏感），含显式空串 | `status` |
-| 400 | `INVALID_PRIORITY` | `priority` 不是 `low`/`medium`/`high`（大小写敏感），含显式空串 | `priority` |
+| 400 | `INVALID_STATUS` | `status` 是字符串但不在 `todo`/`doing`/`done` 内（大小写敏感），含显式空串 | `status` |
+| 400 | `INVALID_PRIORITY` | `priority` 是字符串但不在 `low`/`medium`/`high` 内（大小写敏感），含显式空串 | `priority` |
 | 400 | `INVALID_ID` | 路径 id 不匹配 `^[1-9][0-9]*$`（如 `abc`、`0`、`-1`、`1.5`） | `id` |
 | 400 | `INVALID_PAGE` | `page` 非十进制整数或 < 1（含空串、`1.5`、`+1`） | `page` |
 | 400 | `INVALID_PAGE_SIZE` | `page_size` 非整数或不在 1–100 | `page_size` |
@@ -156,7 +157,9 @@ Item 对象：
 | 500 | `INTERNAL_ERROR` | 未预期异常（详情只写 stderr，不进响应体） | — |
 
 `PUT` 的校验顺序为：`INVALID_ID` → `INVALID_BODY` → `ITEM_NOT_FOUND` → 字段校验，
-即对不存在的记录提交非法标题时返回 **404**（存在性优先）。
+即对不存在的记录提交非法标题时返回 **404**（存在性优先）。字段校验内部同样遵循
+「先类型、后取值」：`status`/`priority` 不是字符串时返回 `INVALID_BODY`，是字符串但
+不在枚举内时返回 `INVALID_STATUS`/`INVALID_PRIORITY`。
 
 ## 8. 目录结构
 
@@ -179,7 +182,7 @@ cases/issue-board-20261128-032037-codex/
 │   └── app.js           # 交互逻辑；用户文本一律 textContent 渲染
 └── tests/
     ├── __init__.py      # 把 case 根目录加入 sys.path
-    └── test_api.py      # 38 个 unittest 自测用例
+    └── test_api.py      # 42 个 unittest 自测用例
 ```
 
 ## 9. 数据目录与清理
