@@ -1,0 +1,6 @@
+# 运行时数据库与本地缓存，不进入版本库
+data/
+__pycache__/
+*.py[cod]
+*.sqlite3
+*.sqlite3-journal
