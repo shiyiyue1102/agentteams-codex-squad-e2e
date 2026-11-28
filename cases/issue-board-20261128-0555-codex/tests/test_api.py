@@ -305,7 +305,7 @@ class TestCreateItem(ApiTestCase):
         self.assert_error(response, 413, "PAYLOAD_TOO_LARGE", None)
 
     def test_html_title_is_legal_and_returned_raw(self):
-        for title in ("<img src=x onerror=alert(1)>", "<script>alert(1)</script>", '"><svg/onload=alert(1)>'):
+        for title in ("<img src=x onerror=alert(1)>", "<script>alert(1)</script>", '\"><svg/onload=alert(1)>'):
             item = self.create(title=title)
             self.assertEqual(item["title"], title)
             fetched = self.call("GET", "/api/items/{0}".format(item["id"]))
@@ -386,15 +386,14 @@ class TestReadUpdateDelete(ApiTestCase):
             ("%20", "400", "INVALID_ID"),
             ("1%2F2", "404", "NOT_FOUND"),
             ("%2e%2e%2fserver.py", "404", "NOT_FOUND"),
+            # %2f 解码后成为多余分段，属未定义路径，不得被吞并为集合路径
+            ("%2f", "404", "NOT_FOUND"),
         ):
             raw = raw_http_call(self.port, "GET /api/items/{0} HTTP/1.1".format(encoded))
             self.assertIn(status, raw.split("\r\n")[0], encoded)
             self.assertIn(code, raw, encoded)
             self.assertNotIn("Traceback", raw, encoded)
-        # 以 %2f 结尾时按标准 URL 规范化处理，等价于集合路径 /api/items
-        normalized = raw_http_call(self.port, "GET /api/items/%2f HTTP/1.1")
-        self.assertIn("200", normalized.split("\r\n")[0])
-        self.assertIn('"items"', normalized)
+            self.assertNotIn('"items"', raw, encoded)
 
     def test_delete_then_delete_again_is_404(self):
         created = self.create()
@@ -421,6 +420,52 @@ class TestReadUpdateDelete(ApiTestCase):
         raw = raw_http_call(self.port, "PATCH /api/items HTTP/1.1")
         self.assertIn("405", raw.split("\r\n")[0])
         self.assertIn("METHOD_NOT_ALLOWED", raw)
+
+    def test_empty_id_path_is_invalid_id_and_never_writes(self):
+        """``/api/items/``（空 id）按 ``{id}`` 路由处理，POST 为 405 且零写入。"""
+        payload = {"title": "空 id 写入", "status": "todo", "priority": "low"}
+        for method in ("GET", "PUT", "DELETE"):
+            body = payload if method == "PUT" else None
+            response = self.call(method, "/api/items/", body=body)
+            self.assert_error(response, 400, "INVALID_ID", "id")
+            self.assertNotIn("items", response.json())
+
+        response = self.call("POST", "/api/items/", payload)
+        self.assert_error(response, 405, "METHOD_NOT_ALLOWED", None)
+        allow = response.headers.get("Allow", "")
+        for method in ("GET", "PUT", "DELETE"):
+            self.assertIn(method, allow)
+        self.assertNotIn("POST", allow)
+        self.assertEqual(self.total(), 0)
+
+        raw = raw_http_call(self.port, "GET /api/items/ HTTP/1.1")
+        self.assertIn("400", raw.split("\r\n")[0])
+        self.assertIn("INVALID_ID", raw)
+        self.assertNotIn('"items"', raw)
+
+    def test_trailing_slash_api_paths_are_not_found(self):
+        """带尾斜杠或多余分段的 API 路径固定返回 404 NOT_FOUND。"""
+        created = self.create()
+        item_id = created["id"]
+        payload = {"title": "尾斜杠更新", "status": "done", "priority": "high"}
+        for method in ("GET", "PUT", "DELETE"):
+            body = payload if method == "PUT" else None
+            response = self.call(method, "/api/items/{0}/".format(item_id), body=body)
+            self.assert_error(response, 404, "NOT_FOUND", None)
+        # 尾斜杠路由既不返回也不修改或删除精确路径的记录
+        again = self.call("GET", "/api/items/{0}".format(item_id))
+        self.assertEqual(again.status, 200)
+        self.assertEqual(again.json()["title"], "买牛奶")
+        self.assertEqual(self.total(), 1)
+
+        self.assert_error(self.call("GET", "/api/meta/"), 404, "NOT_FOUND", None)
+        self.assertEqual(self.call("GET", "/api/meta").status, 200)
+        self.assertEqual(self.call("GET", "/api/items").status, 200)
+        for request_line in ("GET /api/items//1 HTTP/1.1", "GET /api/items/%2f HTTP/1.1"):
+            raw = raw_http_call(self.port, request_line)
+            self.assertIn("404", raw.split("\r\n")[0], request_line)
+            self.assertIn("NOT_FOUND", raw, request_line)
+            self.assertNotIn('"items"', raw, request_line)
 
 
 class TestSearchFilterPaging(ApiTestCase):
@@ -631,6 +676,10 @@ class TestPersistenceAndStatic(ApiTestCase):
             ("POST", "/api/items", {"title": "", "status": "todo", "priority": "low"}, 400),
             ("GET", "/api/items/abc", None, 400),
             ("GET", "/api/items/999999", None, 404),
+            ("GET", "/api/items/", None, 400),
+            ("POST", "/api/items/", {"title": "x", "status": "todo", "priority": "low"}, 405),
+            ("GET", "/api/items/1/", None, 404),
+            ("GET", "/api/meta/", None, 404),
         )
         for method, path, body, status in cases:
             response = self.call(method, path, body=body)
